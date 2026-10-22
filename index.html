@@ -1,357 +1,1132 @@
 <!DOCTYPE html>
-<html lang="uz">
+<html lang="uz" class="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AIRA - AI Assistant v1.0 </title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test Arena - Real Reyting Platformasi</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#f0fdf4',
+              100: '#dcfce7',
+              500: '#10b981',
+              600: '#059669',
+              700: '#047857',
+            }
+          }
         }
-
-        body {
-            background-color: #050505;
-            color: #ffffff;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-        }
-
-        .container {
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 25px;
-            max-width: 420px;
-            padding: 20px;
-        }
-
-        .ai-avatar-wrapper {
-            position: relative;
-            width: 180px;
-            height: 180px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .ai-sphere {
-            width: 130px;
-            height: 130px;
-            background: radial-gradient(circle at 30% 30%, #ffffff, #888888, #111111);
-            border-radius: 50%;
-            position: relative;
-            box-shadow: 0 0 40px rgba(255, 255, 255, 0.15),
-                        inset 0 0 25px rgba(255, 255, 255, 0.5);
-            animation: breathe 4s ease-in-out infinite;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .ai-core {
-            width: 50px;
-            height: 50px;
-            background: #ffffff;
-            border-radius: 50%;
-            box-shadow: 0 0 20px #ffffff, 0 0 40px #38bdf8;
-            animation: pulse-core 2s ease-in-out infinite alternate;
-        }
-
-        .orbit-ring {
-            position: absolute;
-            width: 160px;
-            height: 160px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 50%;
-            animation: rotate 10s linear infinite;
-        }
-
-        .orbit-ring::after {
-            content: '';
-            position: absolute;
-            top: -4px;
-            left: 50%;
-            width: 7px;
-            height: 7px;
-            background: #38bdf8;
-            border-radius: 50%;
-            box-shadow: 0 0 10px #38bdf8;
-        }
-
-        .listening .ai-sphere {
-            background: radial-gradient(circle at 30% 30%, #ffffff, #38bdf8, #0284c7);
-            box-shadow: 0 0 70px rgba(56, 189, 248, 0.6),
-                        inset 0 0 35px rgba(255, 255, 255, 0.8);
-            animation: listen-pulse 1s ease-in-out infinite alternate;
-        }
-
-        .listening .ai-core {
-            background: #ffffff;
-            box-shadow: 0 0 35px #ffffff, 0 0 70px #ec4899;
-            transform: scale(1.2);
-        }
-
-        @keyframes breathe {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-
-        @keyframes pulse-core {
-            0% { transform: scale(0.9); opacity: 0.8; }
-            100% { transform: scale(1.1); opacity: 1; }
-        }
-
-        @keyframes listen-pulse {
-            0% { transform: scale(1); }
-            100% { transform: scale(1.12); }
-        }
-
-        @keyframes rotate {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        h1 {
-            font-size: 22px;
-            letter-spacing: 3px;
-            color: #ffffff;
-            font-weight: 600;
-        }
-
-        #status {
-            font-size: 13px;
-            color: #a1a1aa;
-            background: rgba(255, 255, 255, 0.03);
-            padding: 12px 18px;
-            border-radius: 14px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            width: 100%;
-            min-height: 50px;
-            max-height: 90px;
-            overflow-y: auto;
-        }
-
-        button {
-            padding: 12px 28px;
-            border: none;
-            border-radius: 30px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            background: #ffffff;
-            color: #050505;
-            box-shadow: 0 4px 20px rgba(255, 255, 255, 0.15);
-        }
-
-        button:hover {
-            background: #38bdf8;
-            color: #ffffff;
-            box-shadow: 0 6px 25px rgba(56, 189, 248, 0.4);
-            transform: translateY(-2px);
-        }
-    </style>
+      }
+    }
+  </script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap');
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: #0b132b;
+    }
+    .glass-card {
+      background: rgba(30, 41, 59, 0.7);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .gold-glow {
+      box-shadow: 0 0 25px rgba(245, 158, 11, 0.25);
+    }
+  </style>
 </head>
-<body>
+<body class="text-slate-100 min-h-screen flex flex-col justify-between selection:bg-emerald-500 selection:text-white">
 
-    <div class="container" id="aira-container">
-        <h1>AIRA AI v1.0</h1>
-        
-        <div class="ai-avatar-wrapper">
-            <div class="orbit-ring"></div>
-            <div class="ai-sphere">
-                <div class="ai-core"></div>
-            </div>
-        </div>
-
-        <p id="status">Tugmani bosing va o'zbek, rus yoki ingliz tilida gapiring...</p>
-        <button id="start-btn">AIRA-ni Yoqish</button>
+  <!-- TOP BAR -->
+  <header class="sticky top-0 z-40 glass-card border-b border-slate-800 px-4 py-3 flex justify-between items-center">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center text-slate-950 font-black text-xl shadow-lg shadow-emerald-500/20">
+        <i class="fa-solid fa-graduation-cap"></i>
+      </div>
+      <div>
+        <h1 class="font-extrabold text-base leading-tight bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">Test Arena</h1>
+        <p id="userNameDisplay" class="text-[10px] text-emerald-400 font-semibold tracking-wider uppercase truncate max-w-[120px]">Foydalanuvchi</p>
+      </div>
     </div>
 
-    <script>
-        const startBtn = document.getElementById('start-btn');
-        const statusText = document.getElementById('status');
-        const container = document.getElementById('aira-container');
+    <!-- Tanga / Ball ko'rsatkich -->
+    <div class="flex items-center gap-2 bg-slate-900/90 border border-amber-500/30 px-3.5 py-1.5 rounded-full shadow-inner">
+      <i class="fa-solid fa-coins text-amber-400 text-sm animate-pulse"></i>
+      <span id="userCoins" class="font-black text-sm text-amber-300">0</span>
+      <span class="text-[10px] font-bold text-amber-500/80">PTS</span>
+    </div>
+  </header>
 
-        // Siz taqdim etgan Gemini API kaliti ulandi
-        const GEMINI_API_KEY = "AQ.Ab8RN6JsE7MyzhzmTzwnkAQOcZKu0DBMBWpkPQ7j2CHK-sW1AA";
+  <!-- MAIN CONTAINER -->
+  <main class="flex-1 max-w-md w-full mx-auto p-4 pb-24">
 
-        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        
-        if (!SpeechRecognition) {
-            statusText.innerText = "Xatolik: Brauzeringiz ovozni tanishni qo'llab-quvvatlamaydi.";
+    <!-- 0. ISM KIRITISH MODALI / EKRANI -->
+    <section id="nameInputSection" class="hidden space-y-4">
+      <div class="glass-card rounded-3xl p-6 text-center shadow-2xl relative overflow-hidden">
+        <div class="w-16 h-16 bg-gradient-to-tr from-emerald-500 to-teal-400 text-slate-950 rounded-2xl flex items-center justify-center mx-auto mb-4 text-2xl shadow-lg shadow-emerald-500/30 font-black">
+          <i class="fa-solid fa-user-plus"></i>
+        </div>
+        <h2 class="text-xl font-extrabold mb-1.5">Xush kelibsiz!</h2>
+        <p class="text-xs text-slate-400 mb-5 leading-relaxed">Reytingda va musobaqada qatnashish uchun ismingiz va familiyangizni kiriting:</p>
+
+        <div class="space-y-3 text-left mb-6">
+          <input type="text" id="userNameInput" placeholder="Masalan: Ali Valiyev" class="w-full bg-slate-900/90 border border-slate-700/80 focus:border-emerald-500 focus:outline-none p-4 rounded-2xl text-xs font-bold text-slate-100 placeholder-slate-500 transition">
+        </div>
+
+        <button onclick="saveUserName()" class="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 active:scale-[0.98] text-slate-950 font-black py-4 rounded-2xl shadow-lg shadow-emerald-500/25 transition duration-200 flex items-center justify-center gap-2 text-xs uppercase tracking-wider">
+          <i class="fa-solid fa-right-to-bracket text-base"></i> Davom Etish
+        </button>
+      </div>
+    </section>
+
+    <!-- 1. MAJBURIY OBUNA EKRANI -->
+    <section id="subscriptionSection" class="hidden space-y-4">
+      <div class="glass-card rounded-3xl p-6 text-center shadow-2xl relative overflow-hidden">
+        <div class="w-16 h-16 bg-gradient-to-tr from-blue-600 to-cyan-400 text-white rounded-2xl flex items-center justify-center mx-auto mb-4 text-2xl shadow-lg shadow-blue-500/30">
+          <i class="fa-solid fa-paper-plane"></i>
+        </div>
+        <h2 class="text-xl font-extrabold mb-1.5">Majburiy Obuna</h2>
+        <p class="text-xs text-slate-400 mb-5 leading-relaxed">Testlarni boshlash va peshqadamlar reytingiga kirish uchun quyidagi kanallarga obuna bo'ling!</p>
+
+        <div class="space-y-2.5 text-left mb-6">
+          <a href="https://t.me" target="_blank" class="flex items-center justify-between bg-slate-900/80 border border-slate-700/60 p-3.5 rounded-2xl hover:border-blue-500/50 transition">
+            <div class="flex items-center gap-3">
+              <i class="fa-brands fa-telegram text-blue-400 text-2xl"></i>
+              <div>
+                <p class="text-xs font-bold">O'zbekiston & Jahon Tarixi</p>
+                <p class="text-[10px] text-slate-400">@tarix_testlar</p>
+              </div>
+            </div>
+            <span class="text-[11px] bg-blue-500/20 text-blue-300 font-bold px-3 py-1 rounded-xl">A'zo bo'lish</span>
+          </a>
+
+          <a href="https://t.me" target="_blank" class="flex items-center justify-between bg-slate-900/80 border border-slate-700/60 p-3.5 rounded-2xl hover:border-blue-500/50 transition">
+            <div class="flex items-center gap-3">
+              <i class="fa-brands fa-telegram text-blue-400 text-2xl"></i>
+              <div>
+                <p class="text-xs font-bold">Rasmiy Testlar Kanali</p>
+                <p class="text-[10px] text-slate-400">@rasmiy_testlar</p>
+              </div>
+            </div>
+            <span class="text-[11px] bg-blue-500/20 text-blue-300 font-bold px-3 py-1 rounded-xl">A'zo bo'lish</span>
+          </a>
+
+          <a href="https://t.me" target="_blank" class="flex items-center justify-between bg-slate-900/80 border border-slate-700/60 p-3.5 rounded-2xl hover:border-blue-500/50 transition">
+            <div class="flex items-center gap-3">
+              <i class="fa-brands fa-telegram text-blue-400 text-2xl"></i>
+              <div>
+                <p class="text-xs font-bold">Reyting va Ballar Boti</p>
+                <p class="text-[10px] text-slate-400">@reyting_bot</p>
+              </div>
+            </div>
+            <span class="text-[11px] bg-blue-500/20 text-blue-300 font-bold px-3 py-1 rounded-xl">A'zo bo'lish</span>
+          </a>
+
+          <a href="https://instagram.com" target="_blank" class="flex items-center justify-between bg-slate-900/80 border border-slate-700/60 p-3.5 rounded-2xl hover:border-pink-500/50 transition">
+            <div class="flex items-center gap-3">
+              <i class="fa-brands fa-instagram text-pink-500 text-2xl"></i>
+              <div>
+                <p class="text-xs font-bold">Rasmiy Instagram Sahifa</p>
+                <p class="text-[10px] text-slate-400">@test_arena_official</p>
+              </div>
+            </div>
+            <span class="text-[11px] bg-pink-500/20 text-pink-300 font-bold px-3 py-1 rounded-xl">Kuzatish</span>
+          </a>
+        </div>
+
+        <button onclick="checkSubscription()" class="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 active:scale-[0.98] text-slate-950 font-black py-4 rounded-2xl shadow-lg shadow-emerald-500/25 transition duration-200 flex items-center justify-center gap-2 text-xs uppercase tracking-wider">
+          <i class="fa-solid fa-circle-check text-base"></i> Obunani Tekshirish
+        </button>
+      </div>
+    </section>
+
+    <!-- 2. FANLAR BO'LIMI EKRANI -->
+    <section id="subjectsSection" class="hidden space-y-5">
+      <div>
+        <h2 class="text-xl font-black">Fanlar katalogi</h2>
+        <p class="text-xs text-slate-400">To'g'ri javoblar orqali tangalarni ko'paytiring</p>
+      </div>
+
+      <!-- FANLAR LISTI -->
+      <div id="subjectList" class="grid grid-cols-2 gap-3">
+        <!-- JS orqali to'ldiriladi -->
+      </div>
+
+      <!-- TANLANGAN FANNING BO'LIMLARI PANELI -->
+      <div id="chaptersPanel" class="hidden space-y-3 pt-2">
+        <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+          <h3 id="currentSubjectTitle" class="font-bold text-base text-emerald-400">--</h3>
+          <button onclick="closeChapters()" class="text-slate-400 hover:text-white text-xs bg-slate-800 px-3 py-1 rounded-lg">Yopish</button>
+        </div>
+        <div id="chapterList" class="space-y-2.5">
+          <!-- Bo'limlar JS orqali -->
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. TEST YECHISH EKRANI -->
+    <section id="quizSection" class="hidden space-y-4">
+      <div class="flex justify-between items-center glass-card p-3.5 rounded-2xl">
+        <div>
+          <span id="quizSubjectLabel" class="text-[10px] font-black uppercase tracking-wider text-emerald-400">Tarix</span>
+          <h4 id="quizChapterLabel" class="text-xs font-bold text-slate-200 truncate max-w-[200px]">1-bo'lim</h4>
+        </div>
+        <div class="text-right">
+          <span class="text-[10px] text-slate-400 block">Savol</span>
+          <p class="font-black text-sm text-slate-100"><span id="currentQuestionNum">1</span> / <span id="totalQuestionsNum">5</span></p>
+        </div>
+      </div>
+
+      <!-- SAVOL KARTASI -->
+      <div class="glass-card rounded-3xl p-5 space-y-4 shadow-xl">
+        <p id="questionText" class="text-sm font-bold text-slate-100 leading-relaxed">
+          Savol yuklanmoqda...
+        </p>
+
+        <!-- VARIANTLAR -->
+        <div id="optionsContainer" class="space-y-2.5 pt-1">
+          <!-- Dynamic options A, B, C, D, E -->
+        </div>
+      </div>
+
+      <!-- IZOH VA TUSHUNTIRISH -->
+      <div id="explanationBox" class="hidden p-4 bg-slate-900/90 border border-emerald-500/40 rounded-2xl space-y-1">
+        <p class="text-xs font-bold text-emerald-400 flex items-center gap-1.5">
+          <i class="fa-solid fa-lightbulb"></i> Tushuntirish:
+        </p>
+        <p id="explanationText" class="text-xs text-slate-300 leading-relaxed"></p>
+      </div>
+
+      <button id="nextBtn" onclick="nextQuestion()" class="hidden w-full bg-slate-800 hover:bg-slate-700 active:scale-[0.98] text-white font-bold py-3.5 rounded-2xl transition shadow-lg flex items-center justify-center gap-2 text-xs">
+        Keyingi savol <i class="fa-solid fa-arrow-right"></i>
+      </button>
+    </section>
+
+    <!-- 4. NATIJA EKRANI -->
+    <section id="resultSection" class="hidden text-center space-y-5 py-4">
+      <div class="w-20 h-20 bg-emerald-500/10 text-emerald-400 rounded-3xl flex items-center justify-center mx-auto text-3xl border border-emerald-500/30 shadow-lg shadow-emerald-500/10">
+        <i class="fa-solid fa-award"></i>
+      </div>
+      <div>
+        <h2 class="text-2xl font-black mb-1">Test Yakunlandi!</h2>
+        <p class="text-xs text-slate-400">To'g'ri javoblaringiz reytingizga qo'shildi</p>
+      </div>
+
+      <div class="glass-card rounded-3xl p-5 grid grid-cols-2 gap-3">
+        <div class="bg-slate-900/80 p-3.5 rounded-2xl border border-slate-800">
+          <span class="text-[11px] text-slate-400 block mb-1">To'g'ri javoblar</span>
+          <span id="scoreText" class="text-xl font-black text-emerald-400">0 / 5</span>
+        </div>
+        <div class="bg-slate-900/80 p-3.5 rounded-2xl border border-slate-800">
+          <span class="text-[11px] text-slate-400 block mb-1">To'plangan ball</span>
+          <span id="earnedCoinsText" class="text-xl font-black text-amber-400">+0 PTS</span>
+        </div>
+      </div>
+
+      <div class="flex gap-3">
+        <button onclick="showSubjects()" class="flex-1 bg-slate-800 hover:bg-slate-700 text-white font-bold py-3.5 rounded-2xl text-xs transition">
+          Yana test yechish
+        </button>
+        <button onclick="showLeaderboard()" class="flex-1 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-black py-3.5 rounded-2xl text-xs transition shadow-lg shadow-amber-500/20">
+          Reytingni ko'rish
+        </button>
+      </div>
+    </section>
+
+    <!-- 5. REAL REYTING (LEADERBOARD) EKRANI -->
+    <section id="leaderboardSection" class="hidden space-y-5">
+      <div>
+        <h2 class="text-xl font-black">Haqiqiy Ishtirokchilar Reytingi</h2>
+        <p class="text-xs text-slate-400">Faqat ro'yxatdan o'tgan real foydalanuvchilar natijalari</p>
+      </div>
+
+      <!-- TOP 3 SHOHSUPA (PODIUM) -->
+      <div id="top3Container" class="grid grid-cols-3 gap-2 items-end pt-4 pb-2">
+        <!-- JS orqali faqat haqiqiy 1, 2, 3 o'rinlar chiqariladi -->
+      </div>
+
+      <!-- REYTING LISTI -->
+      <div class="glass-card rounded-3xl p-4 space-y-2">
+        <h4 class="text-xs font-bold text-slate-400 mb-3 px-1">Barcha haqiqiy qatnashchilar</h4>
+        <div id="leaderboardList" class="space-y-2">
+          <!-- JS orqali dynamic chiqariladi -->
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- PASTI NAVIGATSIYA BAR -->
+  <nav class="fixed bottom-0 left-0 right-0 z-40 glass-card border-t border-slate-800 py-3 px-8">
+    <div class="max-w-md mx-auto flex justify-around items-center">
+      <button onclick="navSwitch('subjects')" id="navSubjectsBtn" class="flex flex-col items-center gap-1 text-emerald-400 transition">
+        <i class="fa-solid fa-book-open text-lg"></i>
+        <span class="text-[10px] font-bold">Testlar</span>
+      </button>
+      <button onclick="navSwitch('leaderboard')" id="navLeaderboardBtn" class="flex flex-col items-center gap-1 text-slate-400 hover:text-slate-200 transition">
+        <i class="fa-solid fa-trophy text-lg"></i>
+        <span class="text-[10px] font-bold">Reyting</span>
+      </button>
+    </div>
+  </nav>
+
+  <script>
+    // 1. MUTLAQ HAR XIL VA UNIKAL SAVOLLAR BAZASI
+    const DATABASE = {
+      tarix: {
+        name: "O'zbekiston & Jahon Tarixi",
+        icon: "fa-landmark",
+        color: "from-amber-500 to-orange-600",
+        chapters: [
+          {
+            id: 1,
+            title: "1-bo'lim: Qadimgi Davlatlar",
+            questions: [
+              {
+                q: "Eng qadimgi odamlarning O'zbekiston hududidagi ilk manzilgohi qayerdan topilgan?",
+                options: ["Obirahmat", "Sokin g'ori", "Selung'ur g'ori", "Teshiktosh g'ori", "Zarautsoy"],
+                correct: 2,
+                exp: "Farg'ona vodiysidagi Selung'ur g'oridan eng qadimgi ilk paleolit davriga oid odam qoldiqlari topilgan."
+              },
+              {
+                q: "Qadimgi Baqtriya va So'g'diyona davlatlari haqida ma'lumot beruvchi muqaddas kitob qaysi?",
+                options: ["Avesto", "Veda", "Qur'on", "Injil", "Gilgamesh"],
+                correct: 0,
+                exp: "Avesto kitobida qadimgi O'zbekiston hududidagi Baqtriya, Xorazm va So'g'diyona shaharlari eslab o'tilgan."
+              },
+              {
+                q: "M.av. 329-yilda Aleksandr Makedonskiyga qarshi So'g'diyonada ko'tarilgan qo'zg'olonga kim boshchilik qilgan?",
+                options: ["Spitamen", "Skunxa", "Tomiris", "Shirak", "Bess"],
+                correct: 0,
+                exp: "Spitamen Makedonskiy qo'shinlariga qarshi 3 yil davomida jasorat bilan qarshilik ko'rsatgan."
+              },
+              {
+                q: "Kushon imperiyasiga kim asos solgan?",
+                options: ["Kanishka I", "Kujula Kadfiz", "Vima Kadfiz", "Vasudeva", "Xuvishka"],
+                correct: 1,
+                exp: "M.av. I asrda Kushon davlatiga Kujula Kadfiz tomonidan asos solingan."
+              },
+              {
+                q: "Qadimgi Xorazm yozuvi va kalendari qaysi asrda shakllangan?",
+                options: ["M.av. V-IV asrlar", "M.av. I asr", "M.av. III asr", "M.av. VIII asr", "M.av. X asr"],
+                correct: 2,
+                exp: "M.av. III asrda Xorazmda o'z yozuvi va taqvimi keng qo'llanila boshlagan."
+              }
+            ]
+          },
+          {
+            id: 2,
+            title: "2-bo'lim: Amir Temur va Temuriylar",
+            questions: [
+              {
+                q: "Amir Temur nechanchi yilda Movarounnahrning amiri deb e'lon qilingan va taxtga o'tirgan?",
+                options: ["1336-yil", "1370-yil", "1380-yil", "1395-yil", "1405-yil"],
+                correct: 1,
+                exp: "1370-yil 9-aprelda Bel qurultoyida Amir Temur Movarounnahrning oliy hukmdori deb e'lon qilindi."
+              },
+              {
+                q: "1395-yilda Amir Temur va Toxtamyshxon o'rtasidagi hal qiluvchi jang qayerda bo'lib o'tgan?",
+                options: ["Kondurcha daryosi", "Terek daryosi", "Loy jangi", "Anqara", "G'ijduvon"],
+                correct: 1,
+                exp: "1395-yil aprel oyida Terek daryosi bo'yida Toxtamysh ustidan uzil-kesil g'alaba qozonilgan."
+              },
+              {
+                q: "Mirzo Ulug'bek tomonidan Samarqandda qurilgan rasadxona nechanchi yilda barpo etilgan?",
+                options: ["1415-yil", "1420-yil", "1428-yil", "1449-yil", "1500-yil"],
+                correct: 2,
+                exp: "1428-1429 yillarda Obirahmat anhori bo'yida Ulug'bek rasadxonasi bunyod etilgan."
+              },
+              {
+                q: "Alisher Navoiyning mashhur 5 ta dostonni o'z ichiga olgan yirik asari nima deb ataladi?",
+                options: ["Xamsa", "Majolis un-nafois", "Lison ut-tayr", "Muhakamat ul-lug'atayn", "Mezon ul-avzon"],
+                correct: 0,
+                exp: "Alisher Navoiy turkiy tilda birinchi bo'lib muhtasham 'Xamsa' (Beshtalik) yaratdi."
+              },
+              {
+                q: "Zahiriddin Muhammad Bobur tomonidan Hindistonda asos solingan saltanat qaysi yili tashkil topdi?",
+                options: ["1507-yil", "1512-yil", "1526-yil", "1530-yil", "1556-yil"],
+                correct: 2,
+                exp: "1526-yildagi Panipat jangidagi g'alabadan so'ng Boburiylar saltanatiga asos solindi."
+              }
+            ]
+          }
+        ]
+      },
+      matematika: {
+        name: "Matematika",
+        icon: "fa-calculator",
+        color: "from-blue-500 to-indigo-600",
+        chapters: [
+          {
+            id: 1,
+            title: "1-bo'lim: Tenglamalar va Kasrlar",
+            questions: [
+              {
+                q: "Tenglamani yeching: 3x + 15 = 45",
+                options: ["x = 5", "x = 8", "x = 10", "x = 12", "x = 15"],
+                correct: 2,
+                exp: "3x = 45 - 15 => 3x = 30 => x = 10."
+              },
+              {
+                q: "2/5 va 3/10 kasrlarning yig'indisini toping.",
+                options: ["5/15", "7/10", "1/2", "4/5", "3/5"],
+                correct: 1,
+                exp: "2/5 = 4/10. Shunda 4/10 + 3/10 = 7/10 hosil bo'ladi."
+              },
+              {
+                q: "Agar to'g'ri to'rtburchakning bo'yi 8 cm, eni 5 cm bo'lsa, uning yuzini toping.",
+                options: ["26 cm²", "30 cm²", "40 cm²", "45 cm²", "13 cm²"],
+                correct: 2,
+                exp: "Yuzi S = a * b formula orqali topiladi: 8 * 5 = 40 cm²."
+              },
+              {
+                q: "Sonning 25% qismi 50 ga teng bo'lsa, bu sonning o'zi nechaga teng?",
+                options: ["100", "150", "200", "250", "300"],
+                correct: 2,
+                exp: "25% bu 1/4 qism demakdir. 50 * 4 = 200."
+              },
+              {
+                q: "Kvadratning perimetri 36 cm bo'lsa, uning tomoni uzunligi qancha?",
+                options: ["6 cm", "8 cm", "9 cm", "12 cm", "18 cm"],
+                correct: 2,
+                exp: "Kvadrat perimetri P = 4a. a = 36 / 4 = 9 cm."
+              }
+            ]
+          },
+          {
+            id: 2,
+            title: "2-bo'lim: Daraja va Geometriya",
+            questions: [
+              {
+                q: "2 ning 5-darajasi (2⁵) nechaga teng?",
+                options: ["10", "16", "25", "32", "64"],
+                correct: 3,
+                exp: "2 * 2 * 2 * 2 * 2 = 32."
+              },
+              {
+                q: "To'g'ri burchakli uchburchakning katetlari 3 cm va 4 cm bo'lsa, gipotenuzasini toping.",
+                options: ["5 cm", "6 cm", "7 cm", "8 cm", "10 cm"],
+                correct: 0,
+                exp: "c² = a² + b² = 3² + 4² = 9 + 16 = 25 => c = 5 cm."
+              },
+              {
+                q: "Uchburchak ichki burchaklarining yig'indisi necha darajaga teng?",
+                options: ["90°", "180°", "270°", "360°", "540°"],
+                correct: 1,
+                exp: "Har qanday tekis uchburchakning ichki burchaklari yig'indisi 180° bo'ladi."
+              },
+              {
+                q: "Soddalashtiring: (a³)² * a⁴",
+                options: ["a⁹", "a¹⁰", "a¹²", "a⁷", "a²⁴"],
+                correct: 1,
+                exp: "(a³)² = a⁶. Keyin a⁶ * a⁴ = a⁶⁺⁴ = a¹⁰."
+              },
+              {
+                q: "Doiraning radiusi 7 cm bo'lsa, uning diametri qanchaga teng?",
+                options: ["3.5 cm", "14 cm", "21 cm", "28 cm", "49 cm"],
+                correct: 1,
+                exp: "Diametr radiusdan 2 baravar katta: D = 2 * r = 2 * 7 = 14 cm."
+              }
+            ]
+          }
+        ]
+      },
+      onatili: {
+        name: "O'zbek Tili",
+        icon: "fa-pen-nib",
+        color: "from-emerald-500 to-teal-600",
+        chapters: [
+          {
+            id: 1,
+            title: "1-bo'lim: Fonetika va Leksikologiya",
+            questions: [
+              {
+                q: "O'zbek tilida nechta unli tovush bor?",
+                options: ["5 ta", "6 ta", "8 ta", "10 ta", "24 ta"],
+                correct: 1,
+                exp: "Hozirgi o'zbek adabiy tilida 6 ta unli fonema bor: [a], [o], [i], [u], [o'], [e]."
+              },
+              {
+                q: "Shakli bir xil, ammo ma'nolari har xil bo'lgan so'zlar nima deyiladi?",
+                options: ["Sinonimlar", "Antonimlar", "Omonimlar", "Paronimlar", "Metafora"],
+                correct: 2,
+                exp: "Yozilishi bir xil, ma'nosi har xil so'zlar omonimlar deyiladi."
+              },
+              {
+                q: "Qaysi qatorda faqat jarangsiz undoshlar berilgan?",
+                options: ["b, d, g, v", "p, t, k, s, ch", "m, n, l, r", "z, j, g', gh", "a, o, i, u"],
+                correct: 1,
+                exp: "P, T, K, S, Ch tovushlari jarangsiz undoshlar hisoblanadi."
+              },
+              {
+                q: "'Chiroyli' so'zining sinonimi qaysi?",
+                options: ["Xunuk", "Go'zal", "Katta", "Aqlli", "Oqil"],
+                correct: 1,
+                exp: "Chiroyli va go'zal so'zlari sinonimdir."
+              },
+              {
+                q: "Qarama-qarshi ma'noli so'zlar nima deyiladi?",
+                options: ["Sinonim", "Antonim", "Omonim", "Frazeologizm", "Istiloh"],
+                correct: 1,
+                exp: "Qarama-qarshi ma'noli so'zlar antonimlar deyiladi."
+              }
+            ]
+          },
+          {
+            id: 2,
+            title: "2-bo'lim: Morfologiya va Sintaksis",
+            questions: [
+              {
+                q: "O'zbek tilida nechta mustaqil so'z turkumi bor?",
+                options: ["4 ta", "5 ta", "6 ta", "7 ta", "9 ta"],
+                correct: 2,
+                exp: "6 ta mustaqil so'z turkumi bor: Ot, Sifat, Son, Olmosh, Fe'l, Ravish."
+              },
+              {
+                q: "'Kitobni o'qidim' jumlasidagi 'kitobni' so'zi qaysi kelishikda?",
+                options: ["Bosh kelishik", "Qaratqich kelishigi", "Tushum kelishigi", "O'rin-payt", "Chiqish"],
+                correct: 2,
+                exp: "-ni qo'shimchasi tushum kelishigidir."
+              },
+              {
+                q: "Gapning bosh bo'laklari qaysilar?",
+                options: ["Ega va Kesim", "To'ldiruvchi va Hol", "Sifatlovchi va Ega", "Kesim va Hol", "Ega va To'ldiruvchi"],
+                correct: 0,
+                exp: "Gapning bosh bo'laklari Ega va Kesimdir."
+              },
+              {
+                q: "Harakatning bajarilish tarzini va vaqtini bilduruvchi so'z turkumi qaysi?",
+                options: ["Sifat", "Ravish", "Fe'l", "Ot", "Olmosh"],
+                correct: 1,
+                exp: "Ravish fe'lga bog'lanib harakat belgisini ko'rsatadi."
+              },
+              {
+                q: "'Bugun havo juda musaffo.' Ushbu gapda 'juda' so'zi qaysi so'z turkumi?",
+                options: ["Sifat", "Daraja ravishi", "Modal so'z", "Yuklama", "Ega"],
+                correct: 1,
+                exp: "'Juda' so'zi daraja ravishi hisoblanadi."
+              }
+            ]
+          }
+        ]
+      },
+      huquq: {
+        name: "Konstitutsiya & Huquq",
+        icon: "fa-scale-balanced",
+        color: "from-purple-500 to-violet-600",
+        chapters: [
+          {
+            id: 1,
+            title: "1-bo'lim: Konstitutsiya Asoslari",
+            questions: [
+              {
+                q: "Yangi tahrirdagi O'zbekiston Respublikasi Konstitutsiyasi qachon referendumda qabul qilingan?",
+                options: ["1992-yil 8-dekabr", "2023-yil 30-aprel", "2020-yil 15-dekabr", "2022-yil 8-dekabr", "2021-yil 1-sentyabr"],
+                correct: 1,
+                exp: "Yangi tahrirdagi Konstitutsiya 2023-yil 30-aprelda qabul qilingan."
+              },
+              {
+                q: "Konstitutsiyaga ko'ra, davlat hokimiyatining birinchi va yagona manbai kim?",
+                options: ["Oliy Majlis", "Prezident", "O'zbekiston xalqi", "Sudlar", "Vazirlar Mahkamasi"],
+                correct: 2,
+                exp: "Davlat hokimiyatining birdan bir manbai O'zbekiston xalqidir."
+              },
+              {
+                q: "O'zbekiston Respublikasida majburiy mehnat taqiqlanadimi?",
+                options: ["Ha, to'liq taqiqlanadi", "Faqat maktab o'quvchilariga", "Faqat qishloq xo'jaligida", "Dam olish kunlari taqiqlanadi", "Belgilanmagan"],
+                correct: 0,
+                exp: "Konstitutsiyaning 44-moddasiga ko'ra majburiy mehnat taqiqlanadi."
+              },
+              {
+                q: "O'zbekiston Respublikasi Oliy Majlisi necha palatadan iborat?",
+                options: ["Bir palatali", "Ikki palatali", "Uch palatali", "Prezident Soveti", "Vazirlar Kengashi"],
+                correct: 1,
+                exp: "Oliy Majlis ikki palatadan: Qonunchilik palatasi va Senatdan iborat."
+              },
+              {
+                q: "O'zbekiston Respublikasining davlat tili qaysi?",
+                options: ["O'zbek tili va Rus tili", "O'zbek tili", "Qoraqalpoq tili", "Ingliz tili", "Barcha tillar"],
+                correct: 1,
+                exp: "O'zbekiston Respublikasining davlat tili o'zbek tilidir."
+              }
+            ]
+          },
+          {
+            id: 2,
+            title: "2-bo'lim: Jinoyat va Fuqarolik Huquqi",
+            questions: [
+              {
+                q: "Jinoyat qonunchiligiga ko'ra umumiy javobgarlik necha yoshdan boshlanadi?",
+                options: ["12 yosh", "14 yosh", "16 yosh", "18 yosh", "21 yosh"],
+                correct: 2,
+                exp: "Umumiy qoidaga ko'ra shaxs 16 yoshga to'lgach javobgarlikka tortiladi."
+              },
+              {
+                q: "Fuqaroning muomala layoqati to'liq necha yoshdan kuchga kiradi?",
+                options: ["14 yosh", "16 yosh", "18 yosh", "20 yosh", "25 yosh"],
+                correct: 2,
+                exp: "18 yoshga to'lgan fuqaro to'liq muomala layoqatiga ega bo'ladi."
+              },
+              {
+                q: "Inson huquqlari umumjahon deklaratsiyasi qachon qabul qilingan?",
+                options: ["1945-yil 9-may", "1948-yil 10-dekabr", "1950-yil 1-yanvar", "1991-yil 31-avgust", "1992-yil 8-dekabr"],
+                correct: 1,
+                exp: "1948-yil 10-dekabrda BMT tomonidan qabul qilingan."
+              },
+              {
+                q: "Aybsizlik prezumpsiyasi nima degani?",
+                options: [
+                  "Aybi isbotlanmaguncha kishi aybsiz hisoblanadi",
+                  "Gumonlanuvchi darhol qamaydi",
+                  "Sudyalar jarima to'laydi",
+                  "Kishi o'z aybsizligini o'zi isbotlashi shart",
+                  "Politsiya qarori yakuniy"
+                ],
+                correct: 0,
+                exp: "Aybi qonuniy tartibda isbotlanmaguncha har bir kishi aybsiz sanaladi."
+              },
+              {
+                q: "O'zbekistonda Qurolli Kuchlarning Oliy Bosh Qo'mondoni kim?",
+                options: ["Mudofaa vaziri", "Oliy Majlis raisi", "O'zbekiston Respublikasi Prezidenti", "Bosh vazir", "DXX raisi"],
+                correct: 2,
+                exp: "O'zbekiston Respublikasi Prezidenti Qurolli Kuchlarning Oliy Bosh Qo'mondonidir."
+              }
+            ]
+          }
+        ]
+      },
+      adabiyot: {
+        name: "Adabiyot",
+        icon: "fa-book-bookmark",
+        color: "from-rose-500 to-pink-600",
+        chapters: [
+          {
+            id: 1,
+            title: "1-bo'lim: Mumtoz Adabiyot",
+            questions: [
+              {
+                q: "Birinchi o'zbek romani 'O'tkan kunlar' muallifi kim?",
+                options: ["Cho'lpon", "Abdulla Qodiriy", "Abdulla Qahhor", "Fitrat", "Oybek"],
+                correct: 1,
+                exp: "Abdulla Qodiriy 'O'tkan kunlar' romani muallifidir."
+              },
+              {
+                q: "Zahiriddin Muhammad Boburning shoh avtobio grafik asari qaysi?",
+                options: ["Boburnoma", "Xamsa", "Muhakamat ul-lug'atayn", "Devonu lug'atit turk", "Qutadg'u bilig"],
+                correct: 0,
+                exp: "'Boburnoma' Boburning mashhur memorial asaridir."
+              },
+              {
+                q: "Turkiy adabiyotda birinchi 'Xamsa' yaratgan shoir kim?",
+                options: ["Nizomiy Ganjaviy", "Alisher Navoiy", "Fuzuliy", "Lutfiy", "Atoyi"],
+                correct: 1,
+                exp: "Alisher Navoiy turkiy tilda birinchi Xamsani yaratdi."
+              },
+              {
+                q: "XI asrda 'Qutadg'u bilig' dostonini yozgan adib kim?",
+                options: ["Yusuf Xos Hojib", "Mahmud Qashqariy", "Ahmad Yugnakiy", "Ahmad Yassaviy", "Pahlavon Mahmud"],
+                correct: 0,
+                exp: "Yusuf Xos Hojib mashhur 'Qutadg'u bilig' asarini yozgan."
+              },
+              {
+                q: "'Kecha va kunduz' romani muallifi kim?",
+                options: ["Fitrat", "Abdulhamid Cho'lpon", "Usmon Nosir", "G'afur G'ulom", "Hamza"],
+                correct: 1,
+                exp: "Cho'lpon 'Kecha va kunduz' romani muallifidir."
+              }
+            ]
+          },
+          {
+            id: 2,
+            title: "2-bo'lim: Zamonaviy Adabiyot",
+            questions: [
+              {
+                q: "'Shum bola' qissasi muallifi kim?",
+                options: ["G'afur G'ulom", "O'tkir Hoshimov", "Said Ahmad", "Xudoyberdi To'xtaboyev", "Erkin Vohidov"],
+                correct: 0,
+                exp: "G'afur G'ulom 'Shum bola' qissasini yaratgan."
+              },
+              {
+                q: "'Dunyoning ishlari' va 'Ikki eshik orasi' asarlari muallifi kim?",
+                options: ["O'tkir Hoshimov", "Tohir Malik", "Chingiz Aytmatov", "Said Ahmad", "Oybek"],
+                correct: 0,
+                exp: "O'tkir Hoshimov ushbu asarlar muallifidir."
+              },
+              {
+                q: "'O'zbegim' qasidasi va 'Ruhlar isyoni' dostonining muallifi kim?",
+                options: ["Abdulla Oripov", "Erkin Vohidov", "Muhammad Yusuf", "Halima Xudoyberdiyeva", "Sirojiddin Sayyid"],
+                correct: 1,
+                exp: "Erkin Vohidov 'O'zbegim' qasidasini yozgan."
+              },
+              {
+                q: "O'zbekiston Respublikasi Davlat Madhiyasi matnini kim yozgan?",
+                options: ["Erkin Vohidov", "Abdulla Oripov", "G'afur G'ulom", "Mirtemir", "Zulfiya"],
+                correct: 1,
+                exp: "O'zbekiston Davlat Madhiyasi matni Abdulla Oripov tomonidan yozilgan."
+              },
+              {
+                q: "'Sariq devni minib' bolalar sarguzasht asarining muallifi kim?",
+                options: ["Xudoyberdi To'xtaboyev", "Anvar Obidjon", "G'afur G'ulom", "Latif Mahmudov", "Hakim Nazir"],
+                correct: 0,
+                exp: "Xudoyberdi To'xtaboyev ushbu bolalar asarini yozgan."
+              }
+            ]
+          }
+        ]
+      },
+      rustili: {
+        name: "Русский Язык",
+        icon: "fa-language",
+        color: "from-cyan-500 to-blue-600",
+        chapters: [
+          {
+            id: 1,
+            title: "1-bo'lim: Грамматика и Лексика",
+            questions: [
+              {
+                q: "Сколько букв в русском алфавите?",
+                options: ["30", "32", "33", "35", "26"],
+                correct: 2,
+                exp: "В русском алфавите 33 буквы."
+              },
+              {
+                q: "Укажите имя существительное женского рода:",
+                options: ["Дом", "Книга", "Окно", "Город", "Стол"],
+                correct: 1,
+                exp: "'Книга' относится к женскому роду."
+              },
+              {
+                q: "Какой падеж отвечает на вопросы 'Кто?' и 'Что?'",
+                options: ["Именительный", "Родительный", "Дательный", "Винительный", "Творительный"],
+                correct: 0,
+                exp: "Именительный падеж отвечает на вопросы Кто? Что?"
+              },
+              {
+                q: "Укажите синоним к слову 'Большой':",
+                options: ["Маленький", "Огромный", "Узкий", "Быстрый", "Красивый"],
+                correct: 1,
+                exp: "'Большой' и 'Огромный' — синонимы."
+              },
+              {
+                q: "Выберите правильное слово: 'Мы (читать) книгу.'",
+                options: ["читает", "читаю", "читаем", "читают", "читаете"],
+                correct: 2,
+                exp: "Форма глагола для 'Мы' — читаем."
+              }
+            ]
+          },
+          {
+            id: 2,
+            title: "2-bo'lim: Синтаксис и Перевод",
+            questions: [
+              {
+                q: "Главные члены предложения — это:",
+                options: ["Подлежащее и Сказуемое", "Дополнение и Обстоятельство", "Определение", "Предлог", "Прилагательное"],
+                correct: 0,
+                exp: "Грамматическую основу составляют подлежащее и сказуемое."
+              },
+              {
+                q: "На какой вопрос отвечает имя прилагательное?",
+                options: ["Что делать?", "Где?", "Какой? Какая?", "Кому?", "Сколько?"],
+                correct: 2,
+                exp: "Имя прилагательное отвечает на вопрос Какой?"
+              },
+              {
+                q: "Укажите антоним к слову 'День':",
+                options: ["Утро", "Ночь", "Вечер", "Солнце", "Тень"],
+                correct: 1,
+                exp: "Антоним к слову 'День' — 'Ночь'."
+              },
+              {
+                q: "Переведите: 'Mening do'stim maktabda o'qiydi.'",
+                options: [
+                  "Мой друг учится в школе.",
+                  "Мой брат работает в школе.",
+                  "Я иду в школу.",
+                  "Друг читает книгу.",
+                  "Мы учимся хорошо."
+                ],
+                correct: 0,
+                exp: "'Mening do'stim maktabda o'qiydi' = Мой друг учится в школе."
+              },
+              {
+                q: "Укажите глагол прошедшего времени:",
+                options: ["Пишет", "Напишет", "Читал", "Поет", "Рисует"],
+                correct: 2,
+                exp: "'Читал' — глагол прошедшего времени."
+              }
+            ]
+          }
+        ]
+      }
+    };
+
+    // FOYDALANUVCHILAR VA REAL REYTING BAZASI (LOCALSTORAGE)
+    function getRealUsersDB() {
+      return JSON.parse(localStorage.getItem('real_users_db')) || [];
+    }
+
+    function saveRealUsersDB(db) {
+      localStorage.setItem('real_users_db', JSON.stringify(db));
+    }
+
+    // CURRENT USER STATE
+    let userData = {
+      name: localStorage.getItem('user_name') || "",
+      coins: parseInt(localStorage.getItem('user_coins')) || 0,
+      subscribed: localStorage.getItem('user_subbed') === 'true'
+    };
+
+    let currentSubjectKey = null;
+    let currentQuestions = [];
+    let currentQuestionIdx = 0;
+    let userAnswers = [];
+
+    // INIT APP
+    window.addEventListener('DOMContentLoaded', () => {
+      if (!userData.name) {
+        hideAllSections();
+        document.getElementById('nameInputSection').classList.remove('hidden');
+      } else {
+        document.getElementById('userNameDisplay').innerText = userData.name;
+        updateCoinsDisplay();
+        if (userData.subscribed) {
+          showSubjects();
         } else {
-            const recognition = new SpeechRecognition();
-            recognition.lang = 'uz-UZ'; 
-            recognition.continuous = true;
-            recognition.interimResults = true;
-
-            let isListening = false;
-            let isSpeaking = false;
-
-            startBtn.addEventListener('click', () => {
-                try {
-                    if (!isListening) {
-                        recognition.start();
-                        isListening = true;
-                        startBtn.innerText = "O'chirish";
-                        statusText.innerText = "Listening... Говорите... Gapiring...";
-                        speak("Aira is online. Eshitayapman.");
-                    } else {
-                        recognition.stop();
-                        isListening = false;
-                        startBtn.innerText = "AIRA-ni Yoqish";
-                        statusText.innerText = "To'xtatildi.";
-                    }
-                } catch (e) {
-                    statusText.innerText = "Xatolik: " + e.message;
-                }
-            });
-
-            recognition.onresult = async (event) => {
-                if (isSpeaking) return;
-
-                let transcript = '';
-                for (let i = event.resultIndex; i < event.results.length; i++) {
-                    transcript += event.results[i][0].transcript;
-                }
-                
-                transcript = transcript.trim().toLowerCase();
-                statusText.innerText = `Eshitildi: "${transcript}"`;
-
-                if (transcript.includes('aira') || transcript.includes('айра') || 
-                    transcript.includes('open') || transcript.includes('kir') || 
-                    transcript.includes('открой') || transcript.includes('qidir') || 
-                    transcript.includes('search') || transcript.includes('найди') ||
-                    transcript.includes('ob-havo') || transcript.includes('погода') || transcript.includes('weather') ||
-                    transcript.length > 5) {
-                    
-                    container.classList.add('listening');
-
-                    // 1. TELEGRAM
-                    if (transcript.includes('telegram') || transcript.includes('телеграм')) {
-                        statusText.innerText = "Telegram ochilmoqda...";
-                        speak("Telegram ochilmoqda.");
-                        setTimeout(() => window.location.href = 'tg://', 1000);
-                    } 
-                    // 2. INSTAGRAM
-                    else if (transcript.includes('instagram') || transcript.includes('инстаграм')) {
-                        statusText.innerText = "Instagram ochilmoqda...";
-                        speak("Instagram ochilmoqda.");
-                        setTimeout(() => window.location.href = 'instagram://', 1000);
-                    } 
-                    // 3. GALEREYA
-                    else if (transcript.includes('gallery') || transcript.includes('galareya') || transcript.includes('галерея')) {
-                        statusText.innerText = "Galereya ochilmoqda...";
-                        speak("Galereya ochilmoqda.");
-                        setTimeout(() => {
-                            window.location.href = 'content://media/internal/images/media';
-                        }, 1000);
-                    }
-                    // 4. GOOGLE QIDIRUV
-                    else if (transcript.includes('google') || transcript.includes('гугл')) {
-                        let query = transcript.replace('aira', '').replace('айра', '').replace('google', '').replace('гугл', '').replace('kir', '').replace('открой', '').replace('qidir', '').replace('search', '').replace('найди', '').trim();
-                        
-                        statusText.innerText = `Google'da qidirilmoqda: ${query}`;
-                        speak(`Google'da ${query} qidirilmoqda.`);
-                        
-                        setTimeout(() => {
-                            window.open(`https://www.google.com/search?q=${encodeURIComponent(query)}`, '_blank');
-                        }, 1000);
-                    }
-                    // 5. YOUTUBE
-                    else if (transcript.includes('youtube') || transcript.includes('ютуб')) {
-                        let query = transcript.replace('aira', '').replace('айра', '').replace('youtube', '').replace('ютуб', '').replace('qidir', '').replace('search', '').replace('найди', '').trim();
-                        
-                        statusText.innerText = `YouTube ochilmoqda: ${query}`;
-                        speak("YouTube ochilmoqda.");
-                        
-                        setTimeout(() => {
-                            if (query.length > 2) {
-                                window.open(`https://www.youtube.com/results?search_query=${encodeURIComponent(query)}`, '_blank');
-                            } else {
-                                window.open('https://www.youtube.com', '_blank');
-                            }
-                        }, 1000);
-                    }
-                    // 6. GEMINI ORQALI SAVOLLAR VA OB-HAVO
-                    else {
-                        statusText.innerText = "O'ylayapman (Gemini)...";
-                        
-                        let aiAnswer = await askGemini(transcript);
-                        statusText.innerText = aiAnswer;
-                        speak(aiAnswer);
-                    }
-
-                    setTimeout(() => {
-                        container.classList.remove('listening');
-                    }, 4000);
-                }
-            };
-
-            recognition.onerror = (event) => {
-                statusText.innerText = "Mikrofon xatosi: " + event.error;
-            };
-
-            recognition.onend = () => {
-                if (isListening && !isSpeaking) {
-                    try { recognition.start(); } catch (e) {}
-                }
-            };
-
-            // Gemini AI bilan bog'lanish funksiyasi
-            async function askGemini(promptText) {
-                try {
-                    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            contents: [{
-                                parts: [{
-                                    text: `Siz AIRA nomli aqlli ovozli yordamchisiz. Foydalanuvchi Samarqand shahrida turadi. Berilgan savolga qaysi tilda (o'zbek, rus yoki ingliz) yozilgan bo'lsa, o'sha tilda qisqacha, aniq va ovozli o'qishga moslab javob bering: ${promptText}`
-                                }]
-                            }]
-                        })
-                    });
-
-                    const data = await response.json();
-                    if (data.candidates && data.candidates[0].content.parts[0].text) {
-                        return data.candidates[0].content.parts[0].text.trim();
-                    } else {
-                        return "Kechirasiz, javob olishda xatolik yuz berdi.";
-                    }
-                } catch (error) {
-                    return "Internetga ulanishda xatolik kuzatildi.";
-                }
-            }
-
-            window.speak = function(text) {
-                isSpeaking = true;
-                const speech = new SpeechSynthesisUtterance(text);
-                
-                if (/[а-яА-ЯЁё]/.test(text)) {
-                    speech.lang = 'ru-RU';
-                } else if (/[a-zA-Z]/.test(text)) {
-                    speech.lang = 'en-US';
-                } else {
-                    speech.lang = 'uz-UZ';
-                }
-                
-                speech.onend = function() {
-                    isSpeaking = false;
-                };
-
-                window.speechSynthesis.speak(speech);
-            }
+          showSubscriptionSection();
         }
-    </script>
+      }
+    });
+
+    function saveUserName() {
+      const input = document.getElementById('userNameInput').value.trim();
+      if (!input) {
+        alert("Iltimos, ismingizni kiriting!");
+        return;
+      }
+      userData.name = input;
+      localStorage.setItem('user_name', input);
+      document.getElementById('userNameDisplay').innerText = input;
+
+      // Real bazada saqlash
+      let db = getRealUsersDB();
+      let existingUser = db.find(u => u.name === input);
+      if (!existingUser) {
+        db.push({
+          name: input,
+          coins: userData.coins,
+          avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(input)}`
+        });
+        saveRealUsersDB(db);
+      }
+
+      showSubscriptionSection();
+    }
+
+    function updateCoinsDisplay() {
+      document.getElementById('userCoins').innerText = userData.coins;
+      localStorage.setItem('user_coins', userData.coins);
+      
+      // Bazadagi balini yangilash
+      if (userData.name) {
+        let db = getRealUsersDB();
+        let uIdx = db.findIndex(u => u.name === userData.name);
+        if (uIdx !== -1) {
+          db[uIdx].coins = userData.coins;
+        } else {
+          db.push({
+            name: userData.name,
+            coins: userData.coins,
+            avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(userData.name)}`
+          });
+        }
+        saveRealUsersDB(db);
+      }
+    }
+
+    function showSubscriptionSection() {
+      hideAllSections();
+      document.getElementById('subscriptionSection').classList.remove('hidden');
+    }
+
+    function checkSubscription() {
+      userData.subscribed = true;
+      localStorage.setItem('user_subbed', 'true');
+      alert("✅ Obunalar muvaffaqiyatli tekshirildi! Xush kelibsiz.");
+      showSubjects();
+    }
+
+    function hideAllSections() {
+      document.getElementById('nameInputSection').classList.add('hidden');
+      document.getElementById('subscriptionSection').classList.add('hidden');
+      document.getElementById('subjectsSection').classList.add('hidden');
+      document.getElementById('quizSection').classList.add('hidden');
+      document.getElementById('resultSection').classList.add('hidden');
+      document.getElementById('leaderboardSection').classList.add('hidden');
+    }
+
+    function showSubjects() {
+      if (!userData.name) return;
+      if (!userData.subscribed) return showSubscriptionSection();
+      hideAllSections();
+      document.getElementById('subjectsSection').classList.remove('hidden');
+      renderSubjectList();
+      updateNavButtons('subjects');
+    }
+
+    function renderSubjectList() {
+      const container = document.getElementById('subjectList');
+      container.innerHTML = '';
+
+      Object.keys(DATABASE).forEach(key => {
+        const sub = DATABASE[key];
+        const card = document.createElement('div');
+        card.className = "glass-card hover:border-emerald-500/50 rounded-3xl p-4 flex flex-col justify-between cursor-pointer transition duration-300 shadow-lg group";
+        card.onclick = () => selectSubject(key);
+        card.innerHTML = `
+          <div class="flex items-center justify-between mb-3">
+            <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr ${sub.color} flex items-center justify-center text-white text-lg shadow-md">
+              <i class="fa-solid ${sub.icon}"></i>
+            </div>
+            <span class="text-[9px] bg-slate-800 text-slate-300 font-extrabold px-2.5 py-1 rounded-full border border-slate-700">2 bo'lim</span>
+          </div>
+          <div>
+            <h3 class="font-extrabold text-xs text-slate-100 group-hover:text-emerald-400 transition">${sub.name}</h3>
+            <p class="text-[10px] text-slate-400 mt-0.5">5 tadan test</p>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function selectSubject(key) {
+      currentSubjectKey = key;
+      const sub = DATABASE[key];
+      document.getElementById('currentSubjectTitle').innerText = sub.name;
+      
+      const chapterList = document.getElementById('chapterList');
+      chapterList.innerHTML = '';
+
+      sub.chapters.forEach(ch => {
+        const item = document.createElement('div');
+        item.className = "glass-card border border-slate-700/60 hover:border-emerald-500 p-4 rounded-2xl flex items-center justify-between cursor-pointer transition shadow-md";
+        item.onclick = () => startQuiz(ch);
+        item.innerHTML = `
+          <div>
+            <h4 class="font-bold text-xs text-slate-100">${ch.title}</h4>
+            <span class="text-[10px] text-slate-400"><i class="fa-solid fa-circle-check text-emerald-400 mr-1"></i> 5 ta unikal savol</span>
+          </div>
+          <i class="fa-solid fa-chevron-right text-xs text-slate-500"></i>
+        `;
+        chapterList.appendChild(item);
+      });
+
+      document.getElementById('chaptersPanel').classList.remove('hidden');
+    }
+
+    function closeChapters() {
+      document.getElementById('chaptersPanel').classList.add('hidden');
+    }
+
+    // TEST MANTIQI
+    function startQuiz(chapter) {
+      currentQuestions = chapter.questions;
+      currentQuestionIdx = 0;
+      userAnswers = [];
+
+      document.getElementById('quizSubjectLabel').innerText = DATABASE[currentSubjectKey].name;
+      document.getElementById('quizChapterLabel').innerText = chapter.title;
+      document.getElementById('totalQuestionsNum').innerText = currentQuestions.length;
+
+      hideAllSections();
+      document.getElementById('quizSection').classList.remove('hidden');
+
+      renderQuestion();
+    }
+
+    function renderQuestion() {
+      const qData = currentQuestions[currentQuestionIdx];
+      document.getElementById('currentQuestionNum').innerText = currentQuestionIdx + 1;
+      document.getElementById('questionText').innerText = qData.q;
+
+      document.getElementById('explanationBox').classList.add('hidden');
+      document.getElementById('nextBtn').classList.add('hidden');
+
+      const optionsContainer = document.getElementById('optionsContainer');
+      optionsContainer.innerHTML = '';
+
+      const letters = ['A', 'B', 'C', 'D', 'E'];
+      qData.options.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.className = "option-btn w-full text-left bg-slate-900/80 border border-slate-700/80 hover:border-slate-500 p-3.5 rounded-2xl flex items-center gap-3 transition text-xs font-semibold";
+        btn.onclick = () => handleAnswer(idx, btn);
+        btn.innerHTML = `
+          <span class="w-6 h-6 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center font-black text-slate-400 shrink-0 text-[11px]">${letters[idx]}</span>
+          <span class="flex-1 text-slate-200">${opt}</span>
+        `;
+        optionsContainer.appendChild(btn);
+      });
+    }
+
+    function handleAnswer(selectedIdx, selectedBtn) {
+      const qData = currentQuestions[currentQuestionIdx];
+      const allBtns = document.querySelectorAll('.option-btn');
+
+      allBtns.forEach(btn => btn.disabled = true);
+
+      const isCorrect = selectedIdx === qData.correct;
+      userAnswers.push(isCorrect);
+
+      if (isCorrect) {
+        selectedBtn.classList.remove('bg-slate-900/80', 'border-slate-700/80');
+        selectedBtn.classList.add('bg-emerald-500/20', 'border-emerald-500', 'text-emerald-300');
+      } else {
+        selectedBtn.classList.remove('bg-slate-900/80', 'border-slate-700/80');
+        selectedBtn.classList.add('bg-rose-500/20', 'border-rose-500', 'text-rose-300');
+
+        allBtns[qData.correct].classList.remove('bg-slate-900/80', 'border-slate-700/80');
+        allBtns[qData.correct].classList.add('bg-emerald-500/20', 'border-emerald-500', 'text-emerald-300');
+      }
+
+      document.getElementById('explanationText').innerText = qData.exp;
+      document.getElementById('explanationBox').classList.remove('hidden');
+      document.getElementById('nextBtn').classList.remove('hidden');
+    }
+
+    function nextQuestion() {
+      currentQuestionIdx++;
+      if (currentQuestionIdx < currentQuestions.length) {
+        renderQuestion();
+      } else {
+        finishQuiz();
+      }
+    }
+
+    function finishQuiz() {
+      hideAllSections();
+      document.getElementById('resultSection').classList.remove('hidden');
+
+      const correctCount = userAnswers.filter(a => a === true).length;
+      const earnedCoins = correctCount * 10; // Faqat to'g'ri javoblarga 10 PTS
+
+      userData.coins += earnedCoins;
+      updateCoinsDisplay();
+
+      document.getElementById('scoreText').innerText = `${correctCount} / ${currentQuestions.length}`;
+      document.getElementById('earnedCoinsText').innerText = `+${earnedCoins} PTS`;
+    }
+
+    // REAL REYTING TIZIMI
+    function showLeaderboard() {
+      if (!userData.name) return;
+      if (!userData.subscribed) return showSubscriptionSection();
+      hideAllSections();
+      document.getElementById('leaderboardSection').classList.remove('hidden');
+      updateNavButtons('leaderboard');
+
+      updateCoinsDisplay();
+
+      let db = getRealUsersDB();
+      // Saralash
+      db.sort((a, b) => b.coins - a.coins);
+
+      const top3Container = document.getElementById('top3Container');
+      const leaderboardList = document.getElementById('leaderboardList');
+
+      top3Container.innerHTML = '';
+      leaderboardList.innerHTML = '';
+
+      if (db.length === 0) {
+        leaderboardList.innerHTML = `<p class="text-center text-xs text-slate-500 py-4">Hozircha ishtirokchilar yo'q</p>`;
+        return;
+      }
+
+      // Top 3 real ishtirokchilar
+      const top1 = db[0];
+      const top2 = db[1];
+      const top3 = db[2];
+
+      if (top2) {
+        top3Container.appendChild(createPodiumCard(top2, 2, "h-28", "border-slate-400", "fa-medal text-slate-300"));
+      }
+      if (top1) {
+        top3Container.appendChild(createPodiumCard(top1, 1, "h-36 gold-glow", "border-amber-400", "fa-crown text-amber-400 text-xl"));
+      }
+      if (top3) {
+        top3Container.appendChild(createPodiumCard(top3, 3, "h-24", "border-amber-700", "fa-award text-amber-600"));
+      }
+
+      // Qolgan ishtirokchilar (4-o'rindan boshlab)
+      if (db.length > 3) {
+        db.slice(3).forEach((user, idx) => {
+          const isMe = user.name === userData.name;
+          const item = document.createElement('div');
+          item.className = `flex items-center justify-between p-3 rounded-2xl border ${isMe ? 'bg-emerald-500/10 border-emerald-500/50' : 'bg-slate-900/60 border-slate-800'}`;
+          item.innerHTML = `
+            <div class="flex items-center gap-3">
+              <span class="font-black text-xs text-slate-500 w-4 text-center">${idx + 4}</span>
+              <img src="${user.avatar}" class="w-8 h-8 rounded-full bg-slate-800">
+              <div>
+                <p class="font-bold text-xs ${isMe ? 'text-emerald-400' : 'text-slate-200'}">${user.name}</p>
+                <span class="text-[9px] text-slate-500">Real Ishtirokchi</span>
+              </div>
+            </div>
+            <div class="text-right">
+              <span class="font-black text-xs text-amber-400">${user.coins}</span>
+              <span class="text-[9px] text-slate-500 block">PTS</span>
+            </div>
+          `;
+          leaderboardList.appendChild(item);
+        });
+      } else if (db.length <= 3) {
+        leaderboardList.innerHTML = `<p class="text-center text-[11px] text-slate-500 py-3">Barcha ishtirokchilar yuqoridagi shohsupada!</p>`;
+      }
+    }
+
+    function createPodiumCard(user, rank, heightClass, borderColor, iconClass) {
+      const card = document.createElement('div');
+      card.className = `glass-card rounded-2xl p-2.5 text-center flex flex-col justify-end items-center border ${borderColor} ${heightClass} relative`;
+      
+      const isMe = user.name === userData.name;
+      
+      card.innerHTML = `
+        <div class="absolute -top-3">
+          <i class="fa-solid ${iconClass}"></i>
+        </div>
+        <img src="${user.avatar}" class="w-9 h-9 rounded-full border-2 ${borderColor} mb-1 bg-slate-800">
+        <h5 class="font-black text-[11px] truncate w-full ${isMe ? 'text-emerald-400' : 'text-slate-100'}">${user.name}</h5>
+        <span class="text-[10px] font-bold text-amber-300"><i class="fa-solid fa-coins text-[9px]"></i> ${user.coins}</span>
+      `;
+      return card;
+    }
+
+    function navSwitch(tab) {
+      if (tab === 'subjects') {
+        showSubjects();
+      } else if (tab === 'leaderboard') {
+        showLeaderboard();
+      }
+    }
+
+    function updateNavButtons(activeTab) {
+      const subBtn = document.getElementById('navSubjectsBtn');
+      const leadBtn = document.getElementById('navLeaderboardBtn');
+
+      if (activeTab === 'subjects') {
+        subBtn.className = "flex flex-col items-center gap-1 text-emerald-400 transition";
+        leadBtn.className = "flex flex-col items-center gap-1 text-slate-400 hover:text-slate-200 transition";
+      } else {
+        leadBtn.className = "flex flex-col items-center gap-1 text-emerald-400 transition";
+        subBtn.className = "flex flex-col items-center gap-1 text-slate-400 hover:text-slate-200 transition";
+      }
+    }
+  </script>
 </body>
 </html>
