@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Test Arena - Real Reyting Platformasi</title>
+  <title>Test Arena - Luxury Premium Edition</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- FontAwesome Icons -->
@@ -14,12 +14,13 @@
       theme: {
         extend: {
           colors: {
-            brand: {
-              50: '#f0fdf4',
-              100: '#dcfce7',
-              500: '#10b981',
-              600: '#059669',
-              700: '#047857',
+            luxury: {
+              gold: '#f59e0b',
+              lightgold: '#fbbf24',
+              darkgold: '#b45309',
+              obsidian: '#07090e',
+              card: '#0f1420',
+              border: '#222d44'
             }
           }
         }
@@ -30,119 +31,136 @@
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap');
     body {
       font-family: 'Plus Jakarta Sans', sans-serif;
-      background: #0b132b;
+      background: #07090e;
+      color: #f8fafc;
     }
-    .glass-card {
-      background: rgba(30, 41, 59, 0.7);
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(255, 255, 255, 0.08);
+    .luxury-card {
+      background: linear-gradient(135deg, rgba(15, 20, 32, 0.95) 0%, rgba(10, 14, 23, 0.98) 100%);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(245, 158, 11, 0.15);
+      box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
     }
     .gold-glow {
-      box-shadow: 0 0 25px rgba(245, 158, 11, 0.25);
+      box-shadow: 0 0 25px rgba(245, 158, 11, 0.3);
+    }
+    .gold-text-gradient {
+      background: linear-gradient(135deg, #fef08a 0%, #f59e0b 50%, #d97706 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .gold-btn {
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+      color: #07090e;
+      font-weight: 800;
+      transition: all 0.3s ease;
+    }
+    .gold-btn:hover {
+      background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+      box-shadow: 0 0 20px rgba(245, 158, 11, 0.5);
     }
   </style>
 </head>
-<body class="text-slate-100 min-h-screen flex flex-col justify-between selection:bg-emerald-500 selection:text-white">
+<body class="min-h-screen flex flex-col justify-between selection:bg-luxury-gold selection:text-black">
 
   <!-- TOP BAR -->
-  <header class="sticky top-0 z-40 glass-card border-b border-slate-800 px-4 py-3 flex justify-between items-center">
+  <header class="sticky top-0 z-40 luxury-card border-b border-luxury-border px-4 py-3 flex justify-between items-center">
     <div class="flex items-center gap-3">
-      <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center text-slate-950 font-black text-xl shadow-lg shadow-emerald-500/20">
-        <i class="fa-solid fa-graduation-cap"></i>
+      <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-luxury-darkgold via-luxury-gold to-luxury-lightgold flex items-center justify-center text-luxury-obsidian font-black text-xl shadow-lg gold-glow">
+        <i class="fa-solid fa-crown"></i>
       </div>
       <div>
-        <h1 class="font-extrabold text-base leading-tight bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">Test Arena</h1>
-        <p id="userNameDisplay" class="text-[10px] text-emerald-400 font-semibold tracking-wider uppercase truncate max-w-[120px]">Foydalanuvchi</p>
+        <h1 class="font-extrabold text-base leading-tight gold-text-gradient">TEST ARENA</h1>
+        <p id="userNameDisplay" class="text-[10px] text-luxury-gold font-bold tracking-widest uppercase truncate max-w-[120px]">VIP Mehmon</p>
       </div>
     </div>
 
     <!-- Tanga / Ball ko'rsatkich -->
-    <div class="flex items-center gap-2 bg-slate-900/90 border border-amber-500/30 px-3.5 py-1.5 rounded-full shadow-inner">
-      <i class="fa-solid fa-coins text-amber-400 text-sm animate-pulse"></i>
-      <span id="userCoins" class="font-black text-sm text-amber-300">0</span>
-      <span class="text-[10px] font-bold text-amber-500/80">PTS</span>
+    <div class="flex items-center gap-2 bg-luxury-obsidian border border-luxury-gold/40 px-4 py-1.5 rounded-full shadow-inner gold-glow">
+      <i class="fa-solid fa-coins text-luxury-gold text-sm animate-pulse"></i>
+      <span id="userCoins" class="font-black text-sm text-luxury-lightgold">0</span>
+      <span class="text-[10px] font-bold text-luxury-gold/80">PTS</span>
     </div>
   </header>
 
   <!-- MAIN CONTAINER -->
   <main class="flex-1 max-w-md w-full mx-auto p-4 pb-24">
 
-    <!-- 0. ISM KIRITISH MODALI / EKRANI -->
+    <!-- 0. ISM KIRITISH MODALI -->
     <section id="nameInputSection" class="hidden space-y-4">
-      <div class="glass-card rounded-3xl p-6 text-center shadow-2xl relative overflow-hidden">
-        <div class="w-16 h-16 bg-gradient-to-tr from-emerald-500 to-teal-400 text-slate-950 rounded-2xl flex items-center justify-center mx-auto mb-4 text-2xl shadow-lg shadow-emerald-500/30 font-black">
-          <i class="fa-solid fa-user-plus"></i>
+      <div class="luxury-card rounded-3xl p-6 text-center shadow-2xl relative overflow-hidden">
+        <div class="w-16 h-16 bg-gradient-to-tr from-luxury-darkgold to-luxury-lightgold text-luxury-obsidian rounded-2xl flex items-center justify-center mx-auto mb-4 text-2xl shadow-lg gold-glow font-black">
+          <i class="fa-solid fa-user-tie"></i>
         </div>
-        <h2 class="text-xl font-extrabold mb-1.5">Xush kelibsiz!</h2>
-        <p class="text-xs text-slate-400 mb-5 leading-relaxed">Reytingda va musobaqada qatnashish uchun ismingiz va familiyangizni kiriting:</p>
+        <h2 class="text-xl font-extrabold mb-1.5 gold-text-gradient">Xush Kelibsiz, VIP Ishtirokchi</h2>
+        <p class="text-xs text-slate-400 mb-5 leading-relaxed">Reyting va musobaqada qatnashish uchun ism-sharifingizni kiriting:</p>
 
         <div class="space-y-3 text-left mb-6">
-          <input type="text" id="userNameInput" placeholder="Masalan: Ali Valiyev" class="w-full bg-slate-900/90 border border-slate-700/80 focus:border-emerald-500 focus:outline-none p-4 rounded-2xl text-xs font-bold text-slate-100 placeholder-slate-500 transition">
+          <input type="text" id="userNameInput" placeholder="Masalan: Mirzo Ulug'bek" class="w-full bg-luxury-obsidian border border-luxury-border focus:border-luxury-gold focus:outline-none p-4 rounded-2xl text-xs font-bold text-slate-100 placeholder-slate-600 transition">
         </div>
 
-        <button onclick="saveUserName()" class="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 active:scale-[0.98] text-slate-950 font-black py-4 rounded-2xl shadow-lg shadow-emerald-500/25 transition duration-200 flex items-center justify-center gap-2 text-xs uppercase tracking-wider">
-          <i class="fa-solid fa-right-to-bracket text-base"></i> Davom Etish
+        <button onclick="saveUserName()" class="w-full gold-btn py-4 rounded-2xl shadow-lg transition duration-200 flex items-center justify-center gap-2 text-xs uppercase tracking-wider">
+          <i class="fa-solid fa-key text-base"></i> Tizimga Kirish
         </button>
       </div>
     </section>
 
     <!-- 1. MAJBURIY OBUNA EKRANI -->
     <section id="subscriptionSection" class="hidden space-y-4">
-      <div class="glass-card rounded-3xl p-6 text-center shadow-2xl relative overflow-hidden">
+      <div class="luxury-card rounded-3xl p-6 text-center shadow-2xl relative overflow-hidden">
         <div class="w-16 h-16 bg-gradient-to-tr from-blue-600 to-cyan-400 text-white rounded-2xl flex items-center justify-center mx-auto mb-4 text-2xl shadow-lg shadow-blue-500/30">
-          <i class="fa-solid fa-paper-plane"></i>
+          <i class="fa-solid fa-shield-halved"></i>
         </div>
-        <h2 class="text-xl font-extrabold mb-1.5">Majburiy Obuna</h2>
-        <p class="text-xs text-slate-400 mb-5 leading-relaxed">Testlarni boshlash va peshqadamlar reytingiga kirish uchun quyidagi kanallarga obuna bo'ling!</p>
+        <h2 class="text-xl font-extrabold mb-1.5 gold-text-gradient">Majburiy VIP Obuna</h2>
+        <p class="text-xs text-slate-400 mb-5 leading-relaxed">Testlarni yechish va mukofotli reytingda qatnashish uchun rasmiy kanallarga obuna bo'ling!</p>
 
         <div class="space-y-2.5 text-left mb-6">
-          <a href="https://t.me" target="_blank" class="flex items-center justify-between bg-slate-900/80 border border-slate-700/60 p-3.5 rounded-2xl hover:border-blue-500/50 transition">
+          <a href="https://t.me" target="_blank" class="flex items-center justify-between bg-luxury-obsidian border border-luxury-border p-3.5 rounded-2xl hover:border-luxury-gold/50 transition">
             <div class="flex items-center gap-3">
               <i class="fa-brands fa-telegram text-blue-400 text-2xl"></i>
               <div>
                 <p class="text-xs font-bold">O'zbekiston & Jahon Tarixi</p>
-                <p class="text-[10px] text-slate-400">@tarix_testlar</p>
+                <p class="text-[10px] text-slate-500">@tarix_testlar</p>
               </div>
             </div>
-            <span class="text-[11px] bg-blue-500/20 text-blue-300 font-bold px-3 py-1 rounded-xl">A'zo bo'lish</span>
+            <span class="text-[11px] bg-blue-500/20 text-blue-300 font-bold px-3 py-1 rounded-xl">Obuna</span>
           </a>
 
-          <a href="https://t.me" target="_blank" class="flex items-center justify-between bg-slate-900/80 border border-slate-700/60 p-3.5 rounded-2xl hover:border-blue-500/50 transition">
+          <a href="https://t.me" target="_blank" class="flex items-center justify-between bg-luxury-obsidian border border-luxury-border p-3.5 rounded-2xl hover:border-luxury-gold/50 transition">
             <div class="flex items-center gap-3">
               <i class="fa-brands fa-telegram text-blue-400 text-2xl"></i>
               <div>
                 <p class="text-xs font-bold">Rasmiy Testlar Kanali</p>
-                <p class="text-[10px] text-slate-400">@rasmiy_testlar</p>
+                <p class="text-[10px] text-slate-500">@rasmiy_testlar</p>
               </div>
             </div>
-            <span class="text-[11px] bg-blue-500/20 text-blue-300 font-bold px-3 py-1 rounded-xl">A'zo bo'lish</span>
+            <span class="text-[11px] bg-blue-500/20 text-blue-300 font-bold px-3 py-1 rounded-xl">Obuna</span>
           </a>
 
-          <a href="https://t.me" target="_blank" class="flex items-center justify-between bg-slate-900/80 border border-slate-700/60 p-3.5 rounded-2xl hover:border-blue-500/50 transition">
+          <a href="https://t.me" target="_blank" class="flex items-center justify-between bg-luxury-obsidian border border-luxury-border p-3.5 rounded-2xl hover:border-luxury-gold/50 transition">
             <div class="flex items-center gap-3">
               <i class="fa-brands fa-telegram text-blue-400 text-2xl"></i>
               <div>
                 <p class="text-xs font-bold">Reyting va Ballar Boti</p>
-                <p class="text-[10px] text-slate-400">@reyting_bot</p>
+                <p class="text-[10px] text-slate-500">@reyting_bot</p>
               </div>
             </div>
-            <span class="text-[11px] bg-blue-500/20 text-blue-300 font-bold px-3 py-1 rounded-xl">A'zo bo'lish</span>
+            <span class="text-[11px] bg-blue-500/20 text-blue-300 font-bold px-3 py-1 rounded-xl">Obuna</span>
           </a>
 
-          <a href="https://instagram.com" target="_blank" class="flex items-center justify-between bg-slate-900/80 border border-slate-700/60 p-3.5 rounded-2xl hover:border-pink-500/50 transition">
+          <a href="https://instagram.com" target="_blank" class="flex items-center justify-between bg-luxury-obsidian border border-luxury-border p-3.5 rounded-2xl hover:border-pink-500/50 transition">
             <div class="flex items-center gap-3">
               <i class="fa-brands fa-instagram text-pink-500 text-2xl"></i>
               <div>
                 <p class="text-xs font-bold">Rasmiy Instagram Sahifa</p>
-                <p class="text-[10px] text-slate-400">@test_arena_official</p>
+                <p class="text-[10px] text-slate-500">@test_arena_official</p>
               </div>
             </div>
             <span class="text-[11px] bg-pink-500/20 text-pink-300 font-bold px-3 py-1 rounded-xl">Kuzatish</span>
           </a>
         </div>
 
-        <button onclick="checkSubscription()" class="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 active:scale-[0.98] text-slate-950 font-black py-4 rounded-2xl shadow-lg shadow-emerald-500/25 transition duration-200 flex items-center justify-center gap-2 text-xs uppercase tracking-wider">
-          <i class="fa-solid fa-circle-check text-base"></i> Obunani Tekshirish
+        <button onclick="checkSubscription()" class="w-full gold-btn py-4 rounded-2xl shadow-lg transition duration-200 flex items-center justify-center gap-2 text-xs uppercase tracking-wider">
+          <i class="fa-solid fa-circle-check text-base"></i> Obunani Tasdiqlash
         </button>
       </div>
     </section>
@@ -150,56 +168,56 @@
     <!-- 2. FANLAR BO'LIMI EKRANI -->
     <section id="subjectsSection" class="hidden space-y-5">
       <div>
-        <h2 class="text-xl font-black">Fanlar katalogi</h2>
-        <p class="text-xs text-slate-400">To'g'ri javoblar orqali tangalarni ko'paytiring</p>
+        <h2 class="text-xl font-extrabold gold-text-gradient">Fanlar Katalogi</h2>
+        <p class="text-xs text-slate-400">Yo'nalishni tanlang va bilimingizni sinang</p>
       </div>
 
       <!-- FANLAR LISTI -->
       <div id="subjectList" class="grid grid-cols-2 gap-3">
-        <!-- JS orqali to'ldiriladi -->
+        <!-- JS orqali -->
       </div>
 
-      <!-- TANLANGAN FANNING BO'LIMLARI PANELI -->
+      <!-- BO'LIMLAR MODALI -->
       <div id="chaptersPanel" class="hidden space-y-3 pt-2">
-        <div class="flex justify-between items-center border-b border-slate-800 pb-2">
-          <h3 id="currentSubjectTitle" class="font-bold text-base text-emerald-400">--</h3>
-          <button onclick="closeChapters()" class="text-slate-400 hover:text-white text-xs bg-slate-800 px-3 py-1 rounded-lg">Yopish</button>
+        <div class="flex justify-between items-center border-b border-luxury-border pb-2">
+          <h3 id="currentSubjectTitle" class="font-bold text-base text-luxury-gold">--</h3>
+          <button onclick="closeChapters()" class="text-slate-400 hover:text-white text-xs bg-luxury-card border border-luxury-border px-3 py-1 rounded-lg">Yopish</button>
         </div>
         <div id="chapterList" class="space-y-2.5">
-          <!-- Bo'limlar JS orqali -->
+          <!-- JS orqali -->
         </div>
       </div>
     </section>
 
-    <!-- 3. TEST YECHISH EKRANI -->
+    <!-- 3. TEST YECHish EKRANI -->
     <section id="quizSection" class="hidden space-y-4">
-      <div class="flex justify-between items-center glass-card p-3.5 rounded-2xl">
+      <div class="flex justify-between items-center luxury-card p-3.5 rounded-2xl">
         <div>
-          <span id="quizSubjectLabel" class="text-[10px] font-black uppercase tracking-wider text-emerald-400">Tarix</span>
+          <span id="quizSubjectLabel" class="text-[10px] font-black uppercase tracking-wider text-luxury-gold">Tarix</span>
           <h4 id="quizChapterLabel" class="text-xs font-bold text-slate-200 truncate max-w-[200px]">1-bo'lim</h4>
         </div>
         <div class="text-right">
           <span class="text-[10px] text-slate-400 block">Savol</span>
-          <p class="font-black text-sm text-slate-100"><span id="currentQuestionNum">1</span> / <span id="totalQuestionsNum">5</span></p>
+          <p class="font-black text-sm text-luxury-lightgold"><span id="currentQuestionNum">1</span> / <span id="totalQuestionsNum">5</span></p>
         </div>
       </div>
 
       <!-- SAVOL KARTASI -->
-      <div class="glass-card rounded-3xl p-5 space-y-4 shadow-xl">
+      <div class="luxury-card rounded-3xl p-5 space-y-4 shadow-xl">
         <p id="questionText" class="text-sm font-bold text-slate-100 leading-relaxed">
           Savol yuklanmoqda...
         </p>
 
         <!-- VARIANTLAR -->
         <div id="optionsContainer" class="space-y-2.5 pt-1">
-          <!-- Dynamic options A, B, C, D, E -->
+          <!-- JS orqali -->
         </div>
       </div>
 
-      <!-- IZOH VA TUSHUNTIRISH -->
-      <div id="explanationBox" class="hidden p-4 bg-slate-900/90 border border-emerald-500/40 rounded-2xl space-y-1">
-        <p class="text-xs font-bold text-emerald-400 flex items-center gap-1.5">
-          <i class="fa-solid fa-lightbulb"></i> Tushuntirish:
+      <!-- IZOH -->
+      <div id="explanationBox" class="hidden p-4 bg-luxury-obsidian border border-luxury-gold/30 rounded-2xl space-y-1">
+        <p class="text-xs font-bold text-luxury-gold flex items-center gap-1.5">
+          <i class="fa-solid fa-lightbulb"></i> Ekspert Tushuntirishi:
         </p>
         <p id="explanationText" class="text-xs text-slate-300 leading-relaxed"></p>
       </div>
@@ -211,62 +229,187 @@
 
     <!-- 4. NATIJA EKRANI -->
     <section id="resultSection" class="hidden text-center space-y-5 py-4">
-      <div class="w-20 h-20 bg-emerald-500/10 text-emerald-400 rounded-3xl flex items-center justify-center mx-auto text-3xl border border-emerald-500/30 shadow-lg shadow-emerald-500/10">
-        <i class="fa-solid fa-award"></i>
+      <div class="w-20 h-20 bg-luxury-gold/10 text-luxury-gold rounded-3xl flex items-center justify-center mx-auto text-3xl border border-luxury-gold/30 gold-glow">
+        <i class="fa-solid fa-trophy"></i>
       </div>
       <div>
-        <h2 class="text-2xl font-black mb-1">Test Yakunlandi!</h2>
-        <p class="text-xs text-slate-400">To'g'ri javoblaringiz reytingizga qo'shildi</p>
+        <h2 class="text-2xl font-black mb-1 gold-text-gradient">Test Yakunlandi!</h2>
+        <p class="text-xs text-slate-400">Natijangiz reyting bazasiga yozildi</p>
       </div>
 
-      <div class="glass-card rounded-3xl p-5 grid grid-cols-2 gap-3">
-        <div class="bg-slate-900/80 p-3.5 rounded-2xl border border-slate-800">
+      <div class="luxury-card rounded-3xl p-5 grid grid-cols-2 gap-3">
+        <div class="bg-luxury-obsidian p-3.5 rounded-2xl border border-luxury-border">
           <span class="text-[11px] text-slate-400 block mb-1">To'g'ri javoblar</span>
           <span id="scoreText" class="text-xl font-black text-emerald-400">0 / 5</span>
         </div>
-        <div class="bg-slate-900/80 p-3.5 rounded-2xl border border-slate-800">
-          <span class="text-[11px] text-slate-400 block mb-1">To'plangan ball</span>
-          <span id="earnedCoinsText" class="text-xl font-black text-amber-400">+0 PTS</span>
+        <div class="bg-luxury-obsidian p-3.5 rounded-2xl border border-luxury-border">
+          <span class="text-[11px] text-slate-400 block mb-1">Qo'shilgan ball</span>
+          <span id="earnedCoinsText" class="text-xl font-black text-luxury-gold">+0 PTS</span>
         </div>
       </div>
 
       <div class="flex gap-3">
         <button onclick="showSubjects()" class="flex-1 bg-slate-800 hover:bg-slate-700 text-white font-bold py-3.5 rounded-2xl text-xs transition">
-          Yana test yechish
+          Yana test ishlash
         </button>
-        <button onclick="showLeaderboard()" class="flex-1 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-black py-3.5 rounded-2xl text-xs transition shadow-lg shadow-amber-500/20">
-          Reytingni ko'rish
+        <button onclick="showLeaderboard()" class="flex-1 gold-btn py-3.5 rounded-2xl text-xs transition shadow-lg">
+          Reytingni Ko'rish
         </button>
       </div>
     </section>
 
-    <!-- 5. REAL REYTING (LEADERBOARD) EKRANI -->
+    <!-- 5. REYTING EKRANI -->
     <section id="leaderboardSection" class="hidden space-y-5">
       <div>
-        <h2 class="text-xl font-black">Haqiqiy Ishtirokchilar Reytingi</h2>
-        <p class="text-xs text-slate-400">Faqat ro'yxatdan o'tgan real foydalanuvchilar natijalari</p>
+        <h2 class="text-xl font-black gold-text-gradient">VIP Ishtirokchilar Reytingi</h2>
+        <p class="text-xs text-slate-400">Eng yuqori ball to'plagan peshqadamlar</p>
       </div>
 
-      <!-- TOP 3 SHOHSUPA (PODIUM) -->
+      <!-- TOP 3 SHOHSUPA -->
       <div id="top3Container" class="grid grid-cols-3 gap-2 items-end pt-4 pb-2">
-        <!-- JS orqali faqat haqiqiy 1, 2, 3 o'rinlar chiqariladi -->
+        <!-- JS orqali -->
       </div>
 
-      <!-- REYTING LISTI -->
-      <div class="glass-card rounded-3xl p-4 space-y-2">
-        <h4 class="text-xs font-bold text-slate-400 mb-3 px-1">Barcha haqiqiy qatnashchilar</h4>
+      <!-- QOLGANLAR -->
+      <div class="luxury-card rounded-3xl p-4 space-y-2">
+        <h4 class="text-xs font-bold text-slate-400 mb-3 px-1">Barcha qatnashchilar</h4>
         <div id="leaderboardList" class="space-y-2">
-          <!-- JS orqali dynamic chiqariladi -->
+          <!-- JS orqali -->
         </div>
+      </div>
+    </section>
+
+    <!-- 6. ADMIN LOGIN EKRANI -->
+    <section id="adminLoginSection" class="hidden space-y-4">
+      <div class="luxury-card rounded-3xl p-6 text-center shadow-2xl relative overflow-hidden">
+        <div class="w-16 h-16 bg-gradient-to-tr from-purple-600 to-indigo-500 text-white rounded-2xl flex items-center justify-center mx-auto mb-4 text-2xl shadow-lg shadow-purple-500/30">
+          <i class="fa-solid fa-user-shield"></i>
+        </div>
+        <h2 class="text-xl font-extrabold mb-1.5 text-purple-400">Admin Boshqaruvi</h2>
+        <p class="text-xs text-slate-400 mb-5 leading-relaxed">Maxfiy parolni kiriting </p>
+
+        <div class="space-y-3 text-left mb-6">
+          <input type="password" id="adminPasswordInput" placeholder="Maxfiy kod..." class="w-full bg-luxury-obsidian border border-luxury-border focus:border-purple-500 focus:outline-none p-4 rounded-2xl text-xs font-bold text-slate-100 placeholder-slate-600 transition">
+        </div>
+
+        <button onclick="verifyAdminPassword()" class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 active:scale-[0.98] text-white font-black py-4 rounded-2xl shadow-lg shadow-purple-600/25 transition duration-200 flex items-center justify-center gap-2 text-xs uppercase tracking-wider">
+          <i class="fa-solid fa-unlock-keyhole text-base"></i> Kirish
+        </button>
+      </div>
+    </section>
+
+    <!-- 7. ADMIN DASHBOARD (QO'SHISH VA O'CHIRISH) -->
+    <section id="adminDashboardSection" class="hidden space-y-4">
+      <div class="flex justify-between items-center luxury-card p-4 rounded-2xl">
+        <div>
+          <h3 class="font-extrabold text-sm text-luxury-gold">Admin Boshqaruv Paneli</h3>
+          <p class="text-[10px] text-slate-400">Savollar bazasini boshqarish</p>
+        </div>
+        <button onclick="showSubjects()" class="text-xs bg-slate-800 text-slate-300 px-3 py-1.5 rounded-xl hover:bg-slate-700 transition">Chiqish</button>
+      </div>
+
+      <!-- TABS (Qo'shish / O'chirish) -->
+      <div class="grid grid-cols-2 gap-2">
+        <button onclick="switchAdminTab('add')" id="tabAddBtn" class="py-2.5 rounded-xl font-extrabold text-xs bg-luxury-gold text-black transition">➕ Savol Qo'shish</button>
+        <button onclick="switchAdminTab('delete')" id="tabDelBtn" class="py-2.5 rounded-xl font-extrabold text-xs bg-luxury-obsidian border border-luxury-border text-slate-400 transition">🗑️ Savolni O'chirish</button>
+      </div>
+
+      <!-- 7.1. SAVOL QO'SHISH FORMASI -->
+      <div id="adminAddForm" class="luxury-card rounded-3xl p-5 space-y-4 shadow-xl">
+        <h4 class="text-xs font-black text-luxury-gold uppercase tracking-wider">Yangi Savol Kiritish</h4>
+        
+        <div class="space-y-1">
+          <label class="text-[11px] font-bold text-slate-300">Fan:</label>
+          <select id="adminSubjectSelect" class="w-full bg-luxury-obsidian border border-luxury-border p-3 rounded-xl text-xs font-bold text-slate-200 focus:outline-none focus:border-luxury-gold">
+            <option value="tarix">O'zbekiston & Jahon Tarixi</option>
+            <option value="matematika">Matematika</option>
+            <option value="onatili">O'zbek Tili</option>
+            <option value="huquq">Konstitutsiya & Huquq</option>
+            <option value="adabiyot">Adabiyot</option>
+            <option value="rustili">Русский Язык</option>
+          </select>
+        </div>
+
+        <div class="space-y-1">
+          <label class="text-[11px] font-bold text-slate-300">Bo'lim:</label>
+          <select id="adminChapterSelect" class="w-full bg-luxury-obsidian border border-luxury-border p-3 rounded-xl text-xs font-bold text-slate-200 focus:outline-none focus:border-luxury-gold">
+            <option value="0">1-bo'lim</option>
+            <option value="1">2-bo'lim</option>
+          </select>
+        </div>
+
+        <div class="space-y-1">
+          <label class="text-[11px] font-bold text-slate-300">Savol matni:</label>
+          <textarea id="adminQuestionText" rows="3" placeholder="Savolni kiriting..." class="w-full bg-luxury-obsidian border border-luxury-border p-3 rounded-xl text-xs font-semibold text-slate-200 focus:outline-none focus:border-luxury-gold placeholder-slate-600"></textarea>
+        </div>
+
+        <div class="space-y-2">
+          <label class="text-[11px] font-bold text-slate-300">5 ta Variant:</label>
+          <input type="text" id="adminOpt0" placeholder="A variant" class="w-full bg-luxury-obsidian border border-luxury-border p-2.5 rounded-xl text-xs text-slate-200">
+          <input type="text" id="adminOpt1" placeholder="B variant" class="w-full bg-luxury-obsidian border border-luxury-border p-2.5 rounded-xl text-xs text-slate-200">
+          <input type="text" id="adminOpt2" placeholder="C variant" class="w-full bg-luxury-obsidian border border-luxury-border p-2.5 rounded-xl text-xs text-slate-200">
+          <input type="text" id="adminOpt3" placeholder="D variant" class="w-full bg-luxury-obsidian border border-luxury-border p-2.5 rounded-xl text-xs text-slate-200">
+          <input type="text" id="adminOpt4" placeholder="E variant" class="w-full bg-luxury-obsidian border border-luxury-border p-2.5 rounded-xl text-xs text-slate-200">
+        </div>
+
+        <div class="space-y-1">
+          <label class="text-[11px] font-bold text-luxury-gold">To'g'ri javob:</label>
+          <select id="adminCorrectSelect" class="w-full bg-luxury-obsidian border border-luxury-gold/50 p-3 rounded-xl text-xs font-bold text-luxury-lightgold focus:outline-none">
+            <option value="0">A variant to'g'ri</option>
+            <option value="1">B variant to'g'ri</option>
+            <option value="2">C variant to'g'ri</option>
+            <option value="3">D variant to'g'ri</option>
+            <option value="4">E variant to'g'ri</option>
+          </select>
+        </div>
+
+        <div class="space-y-1">
+          <label class="text-[11px] font-bold text-slate-300">Tushuntirish (Izoh):</label>
+          <input type="text" id="adminExpText" placeholder="Nima uchun bu javob to'g'ri..." class="w-full bg-luxury-obsidian border border-luxury-border p-3 rounded-xl text-xs text-slate-200">
+        </div>
+
+        <button onclick="addNewQuestion()" class="w-full gold-btn py-3.5 rounded-xl shadow-lg transition duration-200 flex items-center justify-center gap-2 text-xs uppercase tracking-wider">
+          <i class="fa-solid fa-plus-circle"></i> Bazaga Qo'shish
+        </button>
+      </div>
+
+      <!-- 7.2. SAVOLNI O'CHIRISH FORMASI -->
+      <div id="adminDeleteForm" class="hidden luxury-card rounded-3xl p-5 space-y-4 shadow-xl">
+        <h4 class="text-xs font-black text-rose-400 uppercase tracking-wider">Mavjud Savolni O'chirish</h4>
+
+        <div class="space-y-1">
+          <label class="text-[11px] font-bold text-slate-300">Fanni tanlang:</label>
+          <select id="adminDelSubjectSelect" onchange="loadAdminDeleteChapters()" class="w-full bg-luxury-obsidian border border-luxury-border p-3 rounded-xl text-xs font-bold text-slate-200 focus:outline-none focus:border-rose-500">
+            <!-- JS orqali -->
+          </select>
+        </div>
+
+        <div class="space-y-1">
+          <label class="text-[11px] font-bold text-slate-300">Bo'limni tanlang:</label>
+          <select id="adminDelChapterSelect" onchange="loadAdminDeleteQuestions()" class="w-full bg-luxury-obsidian border border-luxury-border p-3 rounded-xl text-xs font-bold text-slate-200 focus:outline-none focus:border-rose-500">
+            <!-- JS orqali -->
+          </select>
+        </div>
+
+        <div class="space-y-1">
+          <label class="text-[11px] font-bold text-slate-300">O'chiriladigan savolni tanlang:</label>
+          <select id="adminDelQuestionSelect" class="w-full bg-luxury-obsidian border border-luxury-border p-3 rounded-xl text-xs font-bold text-slate-200 focus:outline-none focus:border-rose-500">
+            <option value="">Avval fanni tanlang...</option>
+          </select>
+        </div>
+
+        <button onclick="deleteSelectedQuestion()" class="w-full bg-gradient-to-r from-rose-600 to-red-600 hover:from-rose-500 hover:to-red-500 text-white font-black py-3.5 rounded-xl shadow-lg transition duration-200 flex items-center justify-center gap-2 text-xs uppercase tracking-wider">
+          <i class="fa-solid fa-trash-can"></i> Tanlangan Savolni O'chirish
+        </button>
       </div>
     </section>
 
   </main>
 
   <!-- PASTI NAVIGATSIYA BAR -->
-  <nav class="fixed bottom-0 left-0 right-0 z-40 glass-card border-t border-slate-800 py-3 px-8">
+  <nav class="fixed bottom-0 left-0 right-0 z-40 luxury-card border-t border-luxury-border py-3 px-6">
     <div class="max-w-md mx-auto flex justify-around items-center">
-      <button onclick="navSwitch('subjects')" id="navSubjectsBtn" class="flex flex-col items-center gap-1 text-emerald-400 transition">
+      <button onclick="navSwitch('subjects')" id="navSubjectsBtn" class="flex flex-col items-center gap-1 text-luxury-gold transition">
         <i class="fa-solid fa-book-open text-lg"></i>
         <span class="text-[10px] font-bold">Testlar</span>
       </button>
@@ -274,12 +417,15 @@
         <i class="fa-solid fa-trophy text-lg"></i>
         <span class="text-[10px] font-bold">Reyting</span>
       </button>
+      <button onclick="navSwitch('admin')" id="navAdminBtn" class="flex flex-col items-center gap-1 text-slate-400 hover:text-slate-200 transition">
+        <i class="fa-solid fa-user-shield text-lg"></i>
+        <span class="text-[10px] font-bold">Admin</span>
+      </button>
     </div>
   </nav>
 
   <script>
-    // 1. MUTLAQ HAR XIL VA UNIKAL SAVOLLAR BAZASI
-    const DATABASE = {
+    const DEFAULT_DATABASE = {
       tarix: {
         name: "O'zbekiston & Jahon Tarixi",
         icon: "fa-landmark",
@@ -294,30 +440,6 @@
                 options: ["Obirahmat", "Sokin g'ori", "Selung'ur g'ori", "Teshiktosh g'ori", "Zarautsoy"],
                 correct: 2,
                 exp: "Farg'ona vodiysidagi Selung'ur g'oridan eng qadimgi ilk paleolit davriga oid odam qoldiqlari topilgan."
-              },
-              {
-                q: "Qadimgi Baqtriya va So'g'diyona davlatlari haqida ma'lumot beruvchi muqaddas kitob qaysi?",
-                options: ["Avesto", "Veda", "Qur'on", "Injil", "Gilgamesh"],
-                correct: 0,
-                exp: "Avesto kitobida qadimgi O'zbekiston hududidagi Baqtriya, Xorazm va So'g'diyona shaharlari eslab o'tilgan."
-              },
-              {
-                q: "M.av. 329-yilda Aleksandr Makedonskiyga qarshi So'g'diyonada ko'tarilgan qo'zg'olonga kim boshchilik qilgan?",
-                options: ["Spitamen", "Skunxa", "Tomiris", "Shirak", "Bess"],
-                correct: 0,
-                exp: "Spitamen Makedonskiy qo'shinlariga qarshi 3 yil davomida jasorat bilan qarshilik ko'rsatgan."
-              },
-              {
-                q: "Kushon imperiyasiga kim asos solgan?",
-                options: ["Kanishka I", "Kujula Kadfiz", "Vima Kadfiz", "Vasudeva", "Xuvishka"],
-                correct: 1,
-                exp: "M.av. I asrda Kushon davlatiga Kujula Kadfiz tomonidan asos solingan."
-              },
-              {
-                q: "Qadimgi Xorazm yozuvi va kalendari qaysi asrda shakllangan?",
-                options: ["M.av. V-IV asrlar", "M.av. I asr", "M.av. III asr", "M.av. VIII asr", "M.av. X asr"],
-                correct: 2,
-                exp: "M.av. III asrda Xorazmda o'z yozuvi va taqvimi keng qo'llanila boshlagan."
               }
             ]
           },
@@ -330,30 +452,6 @@
                 options: ["1336-yil", "1370-yil", "1380-yil", "1395-yil", "1405-yil"],
                 correct: 1,
                 exp: "1370-yil 9-aprelda Bel qurultoyida Amir Temur Movarounnahrning oliy hukmdori deb e'lon qilindi."
-              },
-              {
-                q: "1395-yilda Amir Temur va Toxtamyshxon o'rtasidagi hal qiluvchi jang qayerda bo'lib o'tgan?",
-                options: ["Kondurcha daryosi", "Terek daryosi", "Loy jangi", "Anqara", "G'ijduvon"],
-                correct: 1,
-                exp: "1395-yil aprel oyida Terek daryosi bo'yida Toxtamysh ustidan uzil-kesil g'alaba qozonilgan."
-              },
-              {
-                q: "Mirzo Ulug'bek tomonidan Samarqandda qurilgan rasadxona nechanchi yilda barpo etilgan?",
-                options: ["1415-yil", "1420-yil", "1428-yil", "1449-yil", "1500-yil"],
-                correct: 2,
-                exp: "1428-1429 yillarda Obirahmat anhori bo'yida Ulug'bek rasadxonasi bunyod etilgan."
-              },
-              {
-                q: "Alisher Navoiyning mashhur 5 ta dostonni o'z ichiga olgan yirik asari nima deb ataladi?",
-                options: ["Xamsa", "Majolis un-nafois", "Lison ut-tayr", "Muhakamat ul-lug'atayn", "Mezon ul-avzon"],
-                correct: 0,
-                exp: "Alisher Navoiy turkiy tilda birinchi bo'lib muhtasham 'Xamsa' (Beshtalik) yaratdi."
-              },
-              {
-                q: "Zahiriddin Muhammad Bobur tomonidan Hindistonda asos solingan saltanat qaysi yili tashkil topdi?",
-                options: ["1507-yil", "1512-yil", "1526-yil", "1530-yil", "1556-yil"],
-                correct: 2,
-                exp: "1526-yildagi Panipat jangidagi g'alabadan so'ng Boburiylar saltanatiga asos solindi."
               }
             ]
           }
@@ -373,30 +471,6 @@
                 options: ["x = 5", "x = 8", "x = 10", "x = 12", "x = 15"],
                 correct: 2,
                 exp: "3x = 45 - 15 => 3x = 30 => x = 10."
-              },
-              {
-                q: "2/5 va 3/10 kasrlarning yig'indisini toping.",
-                options: ["5/15", "7/10", "1/2", "4/5", "3/5"],
-                correct: 1,
-                exp: "2/5 = 4/10. Shunda 4/10 + 3/10 = 7/10 hosil bo'ladi."
-              },
-              {
-                q: "Agar to'g'ri to'rtburchakning bo'yi 8 cm, eni 5 cm bo'lsa, uning yuzini toping.",
-                options: ["26 cm²", "30 cm²", "40 cm²", "45 cm²", "13 cm²"],
-                correct: 2,
-                exp: "Yuzi S = a * b formula orqali topiladi: 8 * 5 = 40 cm²."
-              },
-              {
-                q: "Sonning 25% qismi 50 ga teng bo'lsa, bu sonning o'zi nechaga teng?",
-                options: ["100", "150", "200", "250", "300"],
-                correct: 2,
-                exp: "25% bu 1/4 qism demakdir. 50 * 4 = 200."
-              },
-              {
-                q: "Kvadratning perimetri 36 cm bo'lsa, uning tomoni uzunligi qancha?",
-                options: ["6 cm", "8 cm", "9 cm", "12 cm", "18 cm"],
-                correct: 2,
-                exp: "Kvadrat perimetri P = 4a. a = 36 / 4 = 9 cm."
               }
             ]
           },
@@ -409,30 +483,6 @@
                 options: ["10", "16", "25", "32", "64"],
                 correct: 3,
                 exp: "2 * 2 * 2 * 2 * 2 = 32."
-              },
-              {
-                q: "To'g'ri burchakli uchburchakning katetlari 3 cm va 4 cm bo'lsa, gipotenuzasini toping.",
-                options: ["5 cm", "6 cm", "7 cm", "8 cm", "10 cm"],
-                correct: 0,
-                exp: "c² = a² + b² = 3² + 4² = 9 + 16 = 25 => c = 5 cm."
-              },
-              {
-                q: "Uchburchak ichki burchaklarining yig'indisi necha darajaga teng?",
-                options: ["90°", "180°", "270°", "360°", "540°"],
-                correct: 1,
-                exp: "Har qanday tekis uchburchakning ichki burchaklari yig'indisi 180° bo'ladi."
-              },
-              {
-                q: "Soddalashtiring: (a³)² * a⁴",
-                options: ["a⁹", "a¹⁰", "a¹²", "a⁷", "a²⁴"],
-                correct: 1,
-                exp: "(a³)² = a⁶. Keyin a⁶ * a⁴ = a⁶⁺⁴ = a¹⁰."
-              },
-              {
-                q: "Doiraning radiusi 7 cm bo'lsa, uning diametri qanchaga teng?",
-                options: ["3.5 cm", "14 cm", "21 cm", "28 cm", "49 cm"],
-                correct: 1,
-                exp: "Diametr radiusdan 2 baravar katta: D = 2 * r = 2 * 7 = 14 cm."
               }
             ]
           }
@@ -445,73 +495,25 @@
         chapters: [
           {
             id: 1,
-            title: "1-bo'lim: Fonetika va Leksikologiya",
+            title: "1-bo'lim: Fonetika",
             questions: [
               {
                 q: "O'zbek tilida nechta unli tovush bor?",
                 options: ["5 ta", "6 ta", "8 ta", "10 ta", "24 ta"],
                 correct: 1,
-                exp: "Hozirgi o'zbek adabiy tilida 6 ta unli fonema bor: [a], [o], [i], [u], [o'], [e]."
-              },
-              {
-                q: "Shakli bir xil, ammo ma'nolari har xil bo'lgan so'zlar nima deyiladi?",
-                options: ["Sinonimlar", "Antonimlar", "Omonimlar", "Paronimlar", "Metafora"],
-                correct: 2,
-                exp: "Yozilishi bir xil, ma'nosi har xil so'zlar omonimlar deyiladi."
-              },
-              {
-                q: "Qaysi qatorda faqat jarangsiz undoshlar berilgan?",
-                options: ["b, d, g, v", "p, t, k, s, ch", "m, n, l, r", "z, j, g', gh", "a, o, i, u"],
-                correct: 1,
-                exp: "P, T, K, S, Ch tovushlari jarangsiz undoshlar hisoblanadi."
-              },
-              {
-                q: "'Chiroyli' so'zining sinonimi qaysi?",
-                options: ["Xunuk", "Go'zal", "Katta", "Aqlli", "Oqil"],
-                correct: 1,
-                exp: "Chiroyli va go'zal so'zlari sinonimdir."
-              },
-              {
-                q: "Qarama-qarshi ma'noli so'zlar nima deyiladi?",
-                options: ["Sinonim", "Antonim", "Omonim", "Frazeologizm", "Istiloh"],
-                correct: 1,
-                exp: "Qarama-qarshi ma'noli so'zlar antonimlar deyiladi."
+                exp: "Hozirgi o'zbek adabiy tilida 6 ta unli fonema bor."
               }
             ]
           },
           {
             id: 2,
-            title: "2-bo'lim: Morfologiya va Sintaksis",
+            title: "2-bo'lim: Morfologiya",
             questions: [
               {
                 q: "O'zbek tilida nechta mustaqil so'z turkumi bor?",
                 options: ["4 ta", "5 ta", "6 ta", "7 ta", "9 ta"],
                 correct: 2,
-                exp: "6 ta mustaqil so'z turkumi bor: Ot, Sifat, Son, Olmosh, Fe'l, Ravish."
-              },
-              {
-                q: "'Kitobni o'qidim' jumlasidagi 'kitobni' so'zi qaysi kelishikda?",
-                options: ["Bosh kelishik", "Qaratqich kelishigi", "Tushum kelishigi", "O'rin-payt", "Chiqish"],
-                correct: 2,
-                exp: "-ni qo'shimchasi tushum kelishigidir."
-              },
-              {
-                q: "Gapning bosh bo'laklari qaysilar?",
-                options: ["Ega va Kesim", "To'ldiruvchi va Hol", "Sifatlovchi va Ega", "Kesim va Hol", "Ega va To'ldiruvchi"],
-                correct: 0,
-                exp: "Gapning bosh bo'laklari Ega va Kesimdir."
-              },
-              {
-                q: "Harakatning bajarilish tarzini va vaqtini bilduruvchi so'z turkumi qaysi?",
-                options: ["Sifat", "Ravish", "Fe'l", "Ot", "Olmosh"],
-                correct: 1,
-                exp: "Ravish fe'lga bog'lanib harakat belgisini ko'rsatadi."
-              },
-              {
-                q: "'Bugun havo juda musaffo.' Ushbu gapda 'juda' so'zi qaysi so'z turkumi?",
-                options: ["Sifat", "Daraja ravishi", "Modal so'z", "Yuklama", "Ega"],
-                correct: 1,
-                exp: "'Juda' so'zi daraja ravishi hisoblanadi."
+                exp: "6 ta mustaqil so'z turkumi bor."
               }
             ]
           }
@@ -524,79 +526,25 @@
         chapters: [
           {
             id: 1,
-            title: "1-bo'lim: Konstitutsiya Asoslari",
+            title: "1-bo'lim: Konstitutsiya",
             questions: [
               {
-                q: "Yangi tahrirdagi O'zbekiston Respublikasi Konstitutsiyasi qachon referendumda qabul qilingan?",
+                q: "Yangi tahrirdagi O'zbekiston Respublikasi Konstitutsiyasi qachon qabul qilingan?",
                 options: ["1992-yil 8-dekabr", "2023-yil 30-aprel", "2020-yil 15-dekabr", "2022-yil 8-dekabr", "2021-yil 1-sentyabr"],
                 correct: 1,
-                exp: "Yangi tahrirdagi Konstitutsiya 2023-yil 30-aprelda qabul qilingan."
-              },
-              {
-                q: "Konstitutsiyaga ko'ra, davlat hokimiyatining birinchi va yagona manbai kim?",
-                options: ["Oliy Majlis", "Prezident", "O'zbekiston xalqi", "Sudlar", "Vazirlar Mahkamasi"],
-                correct: 2,
-                exp: "Davlat hokimiyatining birdan bir manbai O'zbekiston xalqidir."
-              },
-              {
-                q: "O'zbekiston Respublikasida majburiy mehnat taqiqlanadimi?",
-                options: ["Ha, to'liq taqiqlanadi", "Faqat maktab o'quvchilariga", "Faqat qishloq xo'jaligida", "Dam olish kunlari taqiqlanadi", "Belgilanmagan"],
-                correct: 0,
-                exp: "Konstitutsiyaning 44-moddasiga ko'ra majburiy mehnat taqiqlanadi."
-              },
-              {
-                q: "O'zbekiston Respublikasi Oliy Majlisi necha palatadan iborat?",
-                options: ["Bir palatali", "Ikki palatali", "Uch palatali", "Prezident Soveti", "Vazirlar Kengashi"],
-                correct: 1,
-                exp: "Oliy Majlis ikki palatadan: Qonunchilik palatasi va Senatdan iborat."
-              },
-              {
-                q: "O'zbekiston Respublikasining davlat tili qaysi?",
-                options: ["O'zbek tili va Rus tili", "O'zbek tili", "Qoraqalpoq tili", "Ingliz tili", "Barcha tillar"],
-                correct: 1,
-                exp: "O'zbekiston Respublikasining davlat tili o'zbek tilidir."
+                exp: "2023-yil 30-aprelda referendumda qabul qilingan."
               }
             ]
           },
           {
             id: 2,
-            title: "2-bo'lim: Jinoyat va Fuqarolik Huquqi",
+            title: "2-bo'lim: Jinoyat Huquqi",
             questions: [
               {
-                q: "Jinoyat qonunchiligiga ko'ra umumiy javobgarlik necha yoshdan boshlanadi?",
+                q: "Umumiy jinoiy javobgarlik necha yoshdan boshlanadi?",
                 options: ["12 yosh", "14 yosh", "16 yosh", "18 yosh", "21 yosh"],
                 correct: 2,
-                exp: "Umumiy qoidaga ko'ra shaxs 16 yoshga to'lgach javobgarlikka tortiladi."
-              },
-              {
-                q: "Fuqaroning muomala layoqati to'liq necha yoshdan kuchga kiradi?",
-                options: ["14 yosh", "16 yosh", "18 yosh", "20 yosh", "25 yosh"],
-                correct: 2,
-                exp: "18 yoshga to'lgan fuqaro to'liq muomala layoqatiga ega bo'ladi."
-              },
-              {
-                q: "Inson huquqlari umumjahon deklaratsiyasi qachon qabul qilingan?",
-                options: ["1945-yil 9-may", "1948-yil 10-dekabr", "1950-yil 1-yanvar", "1991-yil 31-avgust", "1992-yil 8-dekabr"],
-                correct: 1,
-                exp: "1948-yil 10-dekabrda BMT tomonidan qabul qilingan."
-              },
-              {
-                q: "Aybsizlik prezumpsiyasi nima degani?",
-                options: [
-                  "Aybi isbotlanmaguncha kishi aybsiz hisoblanadi",
-                  "Gumonlanuvchi darhol qamaydi",
-                  "Sudyalar jarima to'laydi",
-                  "Kishi o'z aybsizligini o'zi isbotlashi shart",
-                  "Politsiya qarori yakuniy"
-                ],
-                correct: 0,
-                exp: "Aybi qonuniy tartibda isbotlanmaguncha har bir kishi aybsiz sanaladi."
-              },
-              {
-                q: "O'zbekistonda Qurolli Kuchlarning Oliy Bosh Qo'mondoni kim?",
-                options: ["Mudofaa vaziri", "Oliy Majlis raisi", "O'zbekiston Respublikasi Prezidenti", "Bosh vazir", "DXX raisi"],
-                correct: 2,
-                exp: "O'zbekiston Respublikasi Prezidenti Qurolli Kuchlarning Oliy Bosh Qo'mondonidir."
+                exp: "Umumiy qoidaga ko'ra shaxs 16 yoshdan javobgarlikka tortiladi."
               }
             ]
           }
@@ -615,31 +563,7 @@
                 q: "Birinchi o'zbek romani 'O'tkan kunlar' muallifi kim?",
                 options: ["Cho'lpon", "Abdulla Qodiriy", "Abdulla Qahhor", "Fitrat", "Oybek"],
                 correct: 1,
-                exp: "Abdulla Qodiriy 'O'tkan kunlar' romani muallifidir."
-              },
-              {
-                q: "Zahiriddin Muhammad Boburning shoh avtobio grafik asari qaysi?",
-                options: ["Boburnoma", "Xamsa", "Muhakamat ul-lug'atayn", "Devonu lug'atit turk", "Qutadg'u bilig"],
-                correct: 0,
-                exp: "'Boburnoma' Boburning mashhur memorial asaridir."
-              },
-              {
-                q: "Turkiy adabiyotda birinchi 'Xamsa' yaratgan shoir kim?",
-                options: ["Nizomiy Ganjaviy", "Alisher Navoiy", "Fuzuliy", "Lutfiy", "Atoyi"],
-                correct: 1,
-                exp: "Alisher Navoiy turkiy tilda birinchi Xamsani yaratdi."
-              },
-              {
-                q: "XI asrda 'Qutadg'u bilig' dostonini yozgan adib kim?",
-                options: ["Yusuf Xos Hojib", "Mahmud Qashqariy", "Ahmad Yugnakiy", "Ahmad Yassaviy", "Pahlavon Mahmud"],
-                correct: 0,
-                exp: "Yusuf Xos Hojib mashhur 'Qutadg'u bilig' asarini yozgan."
-              },
-              {
-                q: "'Kecha va kunduz' romani muallifi kim?",
-                options: ["Fitrat", "Abdulhamid Cho'lpon", "Usmon Nosir", "G'afur G'ulom", "Hamza"],
-                correct: 1,
-                exp: "Cho'lpon 'Kecha va kunduz' romani muallifidir."
+                exp: "Abdulla Qodiriy muallifidir."
               }
             ]
           },
@@ -651,31 +575,7 @@
                 q: "'Shum bola' qissasi muallifi kim?",
                 options: ["G'afur G'ulom", "O'tkir Hoshimov", "Said Ahmad", "Xudoyberdi To'xtaboyev", "Erkin Vohidov"],
                 correct: 0,
-                exp: "G'afur G'ulom 'Shum bola' qissasini yaratgan."
-              },
-              {
-                q: "'Dunyoning ishlari' va 'Ikki eshik orasi' asarlari muallifi kim?",
-                options: ["O'tkir Hoshimov", "Tohir Malik", "Chingiz Aytmatov", "Said Ahmad", "Oybek"],
-                correct: 0,
-                exp: "O'tkir Hoshimov ushbu asarlar muallifidir."
-              },
-              {
-                q: "'O'zbegim' qasidasi va 'Ruhlar isyoni' dostonining muallifi kim?",
-                options: ["Abdulla Oripov", "Erkin Vohidov", "Muhammad Yusuf", "Halima Xudoyberdiyeva", "Sirojiddin Sayyid"],
-                correct: 1,
-                exp: "Erkin Vohidov 'O'zbegim' qasidasini yozgan."
-              },
-              {
-                q: "O'zbekiston Respublikasi Davlat Madhiyasi matnini kim yozgan?",
-                options: ["Erkin Vohidov", "Abdulla Oripov", "G'afur G'ulom", "Mirtemir", "Zulfiya"],
-                correct: 1,
-                exp: "O'zbekiston Davlat Madhiyasi matni Abdulla Oripov tomonidan yozilgan."
-              },
-              {
-                q: "'Sariq devni minib' bolalar sarguzasht asarining muallifi kim?",
-                options: ["Xudoyberdi To'xtaboyev", "Anvar Obidjon", "G'afur G'ulom", "Latif Mahmudov", "Hakim Nazir"],
-                correct: 0,
-                exp: "Xudoyberdi To'xtaboyev ushbu bolalar asarini yozgan."
+                exp: "G'afur G'ulom yozgan."
               }
             ]
           }
@@ -688,79 +588,25 @@
         chapters: [
           {
             id: 1,
-            title: "1-bo'lim: Грамматика и Лексика",
+            title: "1-bo'lim: Грамматика",
             questions: [
               {
                 q: "Сколько букв в русском алфавите?",
                 options: ["30", "32", "33", "35", "26"],
                 correct: 2,
                 exp: "В русском алфавите 33 буквы."
-              },
-              {
-                q: "Укажите имя существительное женского рода:",
-                options: ["Дом", "Книга", "Окно", "Город", "Стол"],
-                correct: 1,
-                exp: "'Книга' относится к женскому роду."
-              },
-              {
-                q: "Какой падеж отвечает на вопросы 'Кто?' и 'Что?'",
-                options: ["Именительный", "Родительный", "Дательный", "Винительный", "Творительный"],
-                correct: 0,
-                exp: "Именительный падеж отвечает на вопросы Кто? Что?"
-              },
-              {
-                q: "Укажите синоним к слову 'Большой':",
-                options: ["Маленький", "Огромный", "Узкий", "Быстрый", "Красивый"],
-                correct: 1,
-                exp: "'Большой' и 'Огромный' — синонимы."
-              },
-              {
-                q: "Выберите правильное слово: 'Мы (читать) книгу.'",
-                options: ["читает", "читаю", "читаем", "читают", "читаете"],
-                correct: 2,
-                exp: "Форма глагола для 'Мы' — читаем."
               }
             ]
           },
           {
             id: 2,
-            title: "2-bo'lim: Синтаксис и Перевод",
+            title: "2-bo'lim: Синтаксис",
             questions: [
               {
                 q: "Главные члены предложения — это:",
-                options: ["Подлежащее и Сказуемое", "Дополнение и Обстоятельство", "Определение", "Предлог", "Прилагательное"],
+                options: ["Подлежащее и Сказуемое", "Дополнение", "Определение", "Предлог", "Союз"],
                 correct: 0,
-                exp: "Грамматическую основу составляют подлежащее и сказуемое."
-              },
-              {
-                q: "На какой вопрос отвечает имя прилагательное?",
-                options: ["Что делать?", "Где?", "Какой? Какая?", "Кому?", "Сколько?"],
-                correct: 2,
-                exp: "Имя прилагательное отвечает на вопрос Какой?"
-              },
-              {
-                q: "Укажите антоним к слову 'День':",
-                options: ["Утро", "Ночь", "Вечер", "Солнце", "Тень"],
-                correct: 1,
-                exp: "Антоним к слову 'День' — 'Ночь'."
-              },
-              {
-                q: "Переведите: 'Mening do'stim maktabda o'qiydi.'",
-                options: [
-                  "Мой друг учится в школе.",
-                  "Мой брат работает в школе.",
-                  "Я иду в школу.",
-                  "Друг читает книгу.",
-                  "Мы учимся хорошо."
-                ],
-                correct: 0,
-                exp: "'Mening do'stim maktabda o'qiydi' = Мой друг учится в школе."
-              },
-              {
-                q: "Укажите глагол прошедшего времени:",
-                options: ["Пишет", "Напишет", "Читал", "Поет", "Рисует"],
-                correct: 2,
-                exp: "'Читал' — глагол прошедшего времени."
+                exp: "Подлежащее и сказуемое."
               }
             ]
           }
@@ -768,7 +614,19 @@
       }
     };
 
-    // FOYDALANUVCHILAR VA REAL REYTING BAZASI (LOCALSTORAGE)
+    function getDatabase() {
+      let saved = localStorage.getItem('global_test_database');
+      if (!saved) {
+        localStorage.setItem('global_test_database', JSON.stringify(DEFAULT_DATABASE));
+        return DEFAULT_DATABASE;
+      }
+      return JSON.parse(saved);
+    }
+
+    function saveDatabase(db) {
+      localStorage.setItem('global_test_database', JSON.stringify(db));
+    }
+
     function getRealUsersDB() {
       return JSON.parse(localStorage.getItem('real_users_db')) || [];
     }
@@ -777,7 +635,6 @@
       localStorage.setItem('real_users_db', JSON.stringify(db));
     }
 
-    // CURRENT USER STATE
     let userData = {
       name: localStorage.getItem('user_name') || "",
       coins: parseInt(localStorage.getItem('user_coins')) || 0,
@@ -789,7 +646,6 @@
     let currentQuestionIdx = 0;
     let userAnswers = [];
 
-    // INIT APP
     window.addEventListener('DOMContentLoaded', () => {
       if (!userData.name) {
         hideAllSections();
@@ -815,10 +671,9 @@
       localStorage.setItem('user_name', input);
       document.getElementById('userNameDisplay').innerText = input;
 
-      // Real bazada saqlash
       let db = getRealUsersDB();
-      let existingUser = db.find(u => u.name === input);
-      if (!existingUser) {
+      let existing = db.find(u => u.name === input);
+      if (!existing) {
         db.push({
           name: input,
           coins: userData.coins,
@@ -834,7 +689,6 @@
       document.getElementById('userCoins').innerText = userData.coins;
       localStorage.setItem('user_coins', userData.coins);
       
-      // Bazadagi balini yangilash
       if (userData.name) {
         let db = getRealUsersDB();
         let uIdx = db.findIndex(u => u.name === userData.name);
@@ -859,7 +713,7 @@
     function checkSubscription() {
       userData.subscribed = true;
       localStorage.setItem('user_subbed', 'true');
-      alert("✅ Obunalar muvaffaqiyatli tekshirildi! Xush kelibsiz.");
+      alert("✅ VIP Obuna tasdiqlandi! Xush kelibsiz.");
       showSubjects();
     }
 
@@ -870,6 +724,8 @@
       document.getElementById('quizSection').classList.add('hidden');
       document.getElementById('resultSection').classList.add('hidden');
       document.getElementById('leaderboardSection').classList.add('hidden');
+      document.getElementById('adminLoginSection').classList.add('hidden');
+      document.getElementById('adminDashboardSection').classList.add('hidden');
     }
 
     function showSubjects() {
@@ -884,22 +740,23 @@
     function renderSubjectList() {
       const container = document.getElementById('subjectList');
       container.innerHTML = '';
+      const DB = getDatabase();
 
-      Object.keys(DATABASE).forEach(key => {
-        const sub = DATABASE[key];
+      Object.keys(DB).forEach(key => {
+        const sub = DB[key];
         const card = document.createElement('div');
-        card.className = "glass-card hover:border-emerald-500/50 rounded-3xl p-4 flex flex-col justify-between cursor-pointer transition duration-300 shadow-lg group";
+        card.className = "luxury-card hover:border-luxury-gold/60 rounded-3xl p-4 flex flex-col justify-between cursor-pointer transition duration-300 shadow-xl group";
         card.onclick = () => selectSubject(key);
         card.innerHTML = `
           <div class="flex items-center justify-between mb-3">
             <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr ${sub.color} flex items-center justify-center text-white text-lg shadow-md">
               <i class="fa-solid ${sub.icon}"></i>
             </div>
-            <span class="text-[9px] bg-slate-800 text-slate-300 font-extrabold px-2.5 py-1 rounded-full border border-slate-700">2 bo'lim</span>
+            <span class="text-[9px] bg-luxury-obsidian text-luxury-gold font-extrabold px-2.5 py-1 rounded-full border border-luxury-border">${sub.chapters.length} bo'lim</span>
           </div>
           <div>
-            <h3 class="font-extrabold text-xs text-slate-100 group-hover:text-emerald-400 transition">${sub.name}</h3>
-            <p class="text-[10px] text-slate-400 mt-0.5">5 tadan test</p>
+            <h3 class="font-extrabold text-xs text-slate-100 group-hover:text-luxury-gold transition">${sub.name}</h3>
+            <p class="text-[10px] text-slate-400 mt-0.5">Testlar tayyor</p>
           </div>
         `;
         container.appendChild(card);
@@ -908,7 +765,8 @@
 
     function selectSubject(key) {
       currentSubjectKey = key;
-      const sub = DATABASE[key];
+      const DB = getDatabase();
+      const sub = DB[key];
       document.getElementById('currentSubjectTitle').innerText = sub.name;
       
       const chapterList = document.getElementById('chapterList');
@@ -916,14 +774,14 @@
 
       sub.chapters.forEach(ch => {
         const item = document.createElement('div');
-        item.className = "glass-card border border-slate-700/60 hover:border-emerald-500 p-4 rounded-2xl flex items-center justify-between cursor-pointer transition shadow-md";
+        item.className = "luxury-card border border-luxury-border hover:border-luxury-gold p-4 rounded-2xl flex items-center justify-between cursor-pointer transition shadow-md";
         item.onclick = () => startQuiz(ch);
         item.innerHTML = `
           <div>
             <h4 class="font-bold text-xs text-slate-100">${ch.title}</h4>
-            <span class="text-[10px] text-slate-400"><i class="fa-solid fa-circle-check text-emerald-400 mr-1"></i> 5 ta unikal savol</span>
+            <span class="text-[10px] text-slate-400"><i class="fa-solid fa-circle-check text-luxury-gold mr-1"></i> ${ch.questions.length} ta savol</span>
           </div>
-          <i class="fa-solid fa-chevron-right text-xs text-slate-500"></i>
+          <i class="fa-solid fa-chevron-right text-xs text-luxury-gold"></i>
         `;
         chapterList.appendChild(item);
       });
@@ -935,19 +793,22 @@
       document.getElementById('chaptersPanel').classList.add('hidden');
     }
 
-    // TEST MANTIQI
     function startQuiz(chapter) {
+      if (!chapter.questions || chapter.questions.length === 0) {
+        alert("Bu bo'limda hozircha savollar yo'q!");
+        return;
+      }
       currentQuestions = chapter.questions;
       currentQuestionIdx = 0;
       userAnswers = [];
 
-      document.getElementById('quizSubjectLabel').innerText = DATABASE[currentSubjectKey].name;
+      const DB = getDatabase();
+      document.getElementById('quizSubjectLabel').innerText = DB[currentSubjectKey].name;
       document.getElementById('quizChapterLabel').innerText = chapter.title;
       document.getElementById('totalQuestionsNum').innerText = currentQuestions.length;
 
       hideAllSections();
       document.getElementById('quizSection').classList.remove('hidden');
-
       renderQuestion();
     }
 
@@ -965,10 +826,10 @@
       const letters = ['A', 'B', 'C', 'D', 'E'];
       qData.options.forEach((opt, idx) => {
         const btn = document.createElement('button');
-        btn.className = "option-btn w-full text-left bg-slate-900/80 border border-slate-700/80 hover:border-slate-500 p-3.5 rounded-2xl flex items-center gap-3 transition text-xs font-semibold";
+        btn.className = "option-btn w-full text-left bg-luxury-obsidian border border-luxury-border hover:border-luxury-gold p-3.5 rounded-2xl flex items-center gap-3 transition text-xs font-semibold";
         btn.onclick = () => handleAnswer(idx, btn);
         btn.innerHTML = `
-          <span class="w-6 h-6 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center font-black text-slate-400 shrink-0 text-[11px]">${letters[idx]}</span>
+          <span class="w-6 h-6 rounded-xl bg-luxury-card border border-luxury-border flex items-center justify-center font-black text-luxury-gold shrink-0 text-[11px]">${letters[idx]}</span>
           <span class="flex-1 text-slate-200">${opt}</span>
         `;
         optionsContainer.appendChild(btn);
@@ -981,21 +842,21 @@
 
       allBtns.forEach(btn => btn.disabled = true);
 
-      const isCorrect = selectedIdx === qData.correct;
+      const isCorrect = selectedIdx === parseInt(qData.correct);
       userAnswers.push(isCorrect);
 
       if (isCorrect) {
-        selectedBtn.classList.remove('bg-slate-900/80', 'border-slate-700/80');
+        selectedBtn.classList.remove('bg-luxury-obsidian', 'border-luxury-border');
         selectedBtn.classList.add('bg-emerald-500/20', 'border-emerald-500', 'text-emerald-300');
       } else {
-        selectedBtn.classList.remove('bg-slate-900/80', 'border-slate-700/80');
+        selectedBtn.classList.remove('bg-luxury-obsidian', 'border-luxury-border');
         selectedBtn.classList.add('bg-rose-500/20', 'border-rose-500', 'text-rose-300');
 
-        allBtns[qData.correct].classList.remove('bg-slate-900/80', 'border-slate-700/80');
+        allBtns[qData.correct].classList.remove('bg-luxury-obsidian', 'border-luxury-border');
         allBtns[qData.correct].classList.add('bg-emerald-500/20', 'border-emerald-500', 'text-emerald-300');
       }
 
-      document.getElementById('explanationText').innerText = qData.exp;
+      document.getElementById('explanationText').innerText = qData.exp || "Izoh kiritilmagan.";
       document.getElementById('explanationBox').classList.remove('hidden');
       document.getElementById('nextBtn').classList.remove('hidden');
     }
@@ -1014,7 +875,7 @@
       document.getElementById('resultSection').classList.remove('hidden');
 
       const correctCount = userAnswers.filter(a => a === true).length;
-      const earnedCoins = correctCount * 10; // Faqat to'g'ri javoblarga 10 PTS
+      const earnedCoins = correctCount * 10;
 
       userData.coins += earnedCoins;
       updateCoinsDisplay();
@@ -1023,7 +884,7 @@
       document.getElementById('earnedCoinsText').innerText = `+${earnedCoins} PTS`;
     }
 
-    // REAL REYTING TIZIMI
+    // REYTING
     function showLeaderboard() {
       if (!userData.name) return;
       if (!userData.subscribed) return showSubscriptionSection();
@@ -1034,7 +895,6 @@
       updateCoinsDisplay();
 
       let db = getRealUsersDB();
-      // Saralash
       db.sort((a, b) => b.coins - a.coins);
 
       const top3Container = document.getElementById('top3Container');
@@ -1048,7 +908,6 @@
         return;
       }
 
-      // Top 3 real ishtirokchilar
       const top1 = db[0];
       const top2 = db[1];
       const top3 = db[2];
@@ -1057,54 +916,215 @@
         top3Container.appendChild(createPodiumCard(top2, 2, "h-28", "border-slate-400", "fa-medal text-slate-300"));
       }
       if (top1) {
-        top3Container.appendChild(createPodiumCard(top1, 1, "h-36 gold-glow", "border-amber-400", "fa-crown text-amber-400 text-xl"));
+        top3Container.appendChild(createPodiumCard(top1, 1, "h-36 gold-glow", "border-luxury-gold", "fa-crown text-luxury-gold text-xl"));
       }
       if (top3) {
         top3Container.appendChild(createPodiumCard(top3, 3, "h-24", "border-amber-700", "fa-award text-amber-600"));
       }
 
-      // Qolgan ishtirokchilar (4-o'rindan boshlab)
       if (db.length > 3) {
         db.slice(3).forEach((user, idx) => {
           const isMe = user.name === userData.name;
           const item = document.createElement('div');
-          item.className = `flex items-center justify-between p-3 rounded-2xl border ${isMe ? 'bg-emerald-500/10 border-emerald-500/50' : 'bg-slate-900/60 border-slate-800'}`;
+          item.className = `flex items-center justify-between p-3 rounded-2xl border ${isMe ? 'bg-luxury-gold/10 border-luxury-gold/50' : 'luxury-card border-luxury-border'}`;
           item.innerHTML = `
             <div class="flex items-center gap-3">
               <span class="font-black text-xs text-slate-500 w-4 text-center">${idx + 4}</span>
-              <img src="${user.avatar}" class="w-8 h-8 rounded-full bg-slate-800">
+              <img src="${user.avatar}" class="w-8 h-8 rounded-full bg-luxury-obsidian">
               <div>
-                <p class="font-bold text-xs ${isMe ? 'text-emerald-400' : 'text-slate-200'}">${user.name}</p>
-                <span class="text-[9px] text-slate-500">Real Ishtirokchi</span>
+                <p class="font-bold text-xs ${isMe ? 'text-luxury-gold' : 'text-slate-200'}">${user.name}</p>
+                <span class="text-[9px] text-slate-500">VIP Ishtirokchi</span>
               </div>
             </div>
             <div class="text-right">
-              <span class="font-black text-xs text-amber-400">${user.coins}</span>
+              <span class="font-black text-xs text-luxury-lightgold">${user.coins}</span>
               <span class="text-[9px] text-slate-500 block">PTS</span>
             </div>
           `;
           leaderboardList.appendChild(item);
         });
-      } else if (db.length <= 3) {
-        leaderboardList.innerHTML = `<p class="text-center text-[11px] text-slate-500 py-3">Barcha ishtirokchilar yuqoridagi shohsupada!</p>`;
       }
     }
 
     function createPodiumCard(user, rank, heightClass, borderColor, iconClass) {
       const card = document.createElement('div');
-      card.className = `glass-card rounded-2xl p-2.5 text-center flex flex-col justify-end items-center border ${borderColor} ${heightClass} relative`;
-      
+      card.className = `luxury-card rounded-2xl p-2.5 text-center flex flex-col justify-end items-center border ${borderColor} ${heightClass} relative`;
       const isMe = user.name === userData.name;
-      
       card.innerHTML = `
-        <div class="absolute -top-3">
-          <i class="fa-solid ${iconClass}"></i>
-        </div>
-        <img src="${user.avatar}" class="w-9 h-9 rounded-full border-2 ${borderColor} mb-1 bg-slate-800">
-        <h5 class="font-black text-[11px] truncate w-full ${isMe ? 'text-emerald-400' : 'text-slate-100'}">${user.name}</h5>
-        <span class="text-[10px] font-bold text-amber-300"><i class="fa-solid fa-coins text-[9px]"></i> ${user.coins}</span>
+        <div class="absolute -top-3"><i class="fa-solid ${iconClass}"></i></div>
+        <img src="${user.avatar}" class="w-9 h-9 rounded-full border-2 ${borderColor} mb-1 bg-luxury-obsidian">
+        <h5 class="font-black text-[11px] truncate w-full ${isMe ? 'text-luxury-gold' : 'text-slate-100'}">${user.name}</h5>
+        <span class="text-[10px] font-bold text-luxury-lightgold"><i class="fa-solid fa-coins text-[9px]"></i> ${user.coins}</span>
       `;
       return card;
+    }
+
+    // ADMIN PANEL & TABS
+    function showAdminLogin() {
+      hideAllSections();
+      document.getElementById('adminLoginSection').classList.remove('hidden');
+      updateNavButtons('admin');
+    }
+
+    function verifyAdminPassword() {
+      const pass = document.getElementById('adminPasswordInput').value.trim();
+      if (pass === "11223344556677889900") {
+        document.getElementById('adminPasswordInput').value = "";
+        hideAllSections();
+        document.getElementById('adminDashboardSection').classList.remove('hidden');
+        switchAdminTab('add');
+      } else {
+        alert("❌ Xato parol!");
+      }
+    }
+
+    function switchAdminTab(tab) {
+      const addForm = document.getElementById('adminAddForm');
+      const delForm = document.getElementById('adminDeleteForm');
+      const addBtn = document.getElementById('tabAddBtn');
+      const delBtn = document.getElementById('tabDelBtn');
+
+      if (tab === 'add') {
+        addForm.classList.remove('hidden');
+        delForm.classList.add('hidden');
+        addBtn.className = "py-2.5 rounded-xl font-extrabold text-xs bg-luxury-gold text-black transition";
+        delBtn.className = "py-2.5 rounded-xl font-extrabold text-xs bg-luxury-obsidian border border-luxury-border text-slate-400 transition";
+      } else {
+        addForm.classList.add('hidden');
+        delForm.classList.remove('hidden');
+        delBtn.className = "py-2.5 rounded-xl font-extrabold text-xs bg-rose-600 text-white transition";
+        addBtn.className = "py-2.5 rounded-xl font-extrabold text-xs bg-luxury-obsidian border border-luxury-border text-slate-400 transition";
+        initDeleteTabDropdowns();
+      }
+    }
+
+    // SAVOL QO'SHISH
+    function addNewQuestion() {
+      const subjectKey = document.getElementById('adminSubjectSelect').value;
+      const chapterIdx = parseInt(document.getElementById('adminChapterSelect').value);
+      const qText = document.getElementById('adminQuestionText').value.trim();
+      
+      const opt0 = document.getElementById('adminOpt0').value.trim();
+      const opt1 = document.getElementById('adminOpt1').value.trim();
+      const opt2 = document.getElementById('adminOpt2').value.trim();
+      const opt3 = document.getElementById('adminOpt3').value.trim();
+      const opt4 = document.getElementById('adminOpt4').value.trim();
+      
+      const correctIdx = parseInt(document.getElementById('adminCorrectSelect').value);
+      const expText = document.getElementById('adminExpText').value.trim();
+
+      if (!qText || !opt0 || !opt1 || !opt2 || !opt3 || !opt4) {
+        alert("Iltimos, savol va barcha 5 ta variantni to'liq kiriting!");
+        return;
+      }
+
+      let DB = getDatabase();
+      if (!DB[subjectKey].chapters[chapterIdx]) {
+        DB[subjectKey].chapters[chapterIdx] = {
+          id: chapterIdx + 1,
+          title: `${chapterIdx + 1}-bo'lim`,
+          questions: []
+        };
+      }
+
+      DB[subjectKey].chapters[chapterIdx].questions.push({
+        q: qText,
+        options: [opt0, opt1, opt2, opt3, opt4],
+        correct: correctIdx,
+        exp: expText || "Admin tomonidan qo'shilgan."
+      });
+
+      saveDatabase(DB);
+      alert("🎉 Savol bazaga muvaffaqiyatli qo'shildi!");
+
+      document.getElementById('adminQuestionText').value = "";
+      document.getElementById('adminOpt0').value = "";
+      document.getElementById('adminOpt1').value = "";
+      document.getElementById('adminOpt2').value = "";
+      document.getElementById('adminOpt3').value = "";
+      document.getElementById('adminOpt4').value = "";
+      document.getElementById('adminExpText').value = "";
+    }
+
+    // SAVOLNI O'CHIRISH FUNKSIYALARI
+    function initDeleteTabDropdowns() {
+      const DB = getDatabase();
+      const subSelect = document.getElementById('adminDelSubjectSelect');
+      subSelect.innerHTML = '';
+
+      Object.keys(DB).forEach(key => {
+        const opt = document.createElement('option');
+        opt.value = key;
+        opt.innerText = DB[key].name;
+        subSelect.appendChild(opt);
+      });
+
+      loadAdminDeleteChapters();
+    }
+
+    function loadAdminDeleteChapters() {
+      const subKey = document.getElementById('adminDelSubjectSelect').value;
+      const DB = getDatabase();
+      const chapSelect = document.getElementById('adminDelChapterSelect');
+      chapSelect.innerHTML = '';
+
+      if (!DB[subKey] || !DB[subKey].chapters) return;
+
+      DB[subKey].chapters.forEach((ch, idx) => {
+        const opt = document.createElement('option');
+        opt.value = idx;
+        opt.innerText = ch.title;
+        chapSelect.appendChild(opt);
+      });
+
+      loadAdminDeleteQuestions();
+    }
+
+    function loadAdminDeleteQuestions() {
+      const subKey = document.getElementById('adminDelSubjectSelect').value;
+      const chapIdx = parseInt(document.getElementById('adminDelChapterSelect').value);
+      const DB = getDatabase();
+      const qSelect = document.getElementById('adminDelQuestionSelect');
+      qSelect.innerHTML = '';
+
+      if (!DB[subKey] || !DB[subKey].chapters[chapIdx]) {
+        qSelect.innerHTML = `<option value="">Savollar topilmadi</option>`;
+        return;
+      }
+
+      const questions = DB[subKey].chapters[chapIdx].questions;
+      if (!questions || questions.length === 0) {
+        qSelect.innerHTML = `<option value="">Bu bo'limda savollar yo'q</option>`;
+        return;
+      }
+
+      questions.forEach((q, qIdx) => {
+        const opt = document.createElement('option');
+        opt.value = qIdx;
+        opt.innerText = `${qIdx + 1}. ${q.q.substring(0, 45)}...`;
+        qSelect.appendChild(opt);
+      });
+    }
+
+    function deleteSelectedQuestion() {
+      const subKey = document.getElementById('adminDelSubjectSelect').value;
+      const chapIdx = parseInt(document.getElementById('adminDelChapterSelect').value);
+      const qIdx = parseInt(document.getElementById('adminDelQuestionSelect').value);
+
+      if (isNaN(qIdx)) {
+        alert("O'chirish uchun savol tanlanmagan!");
+        return;
+      }
+
+      let DB = getDatabase();
+      if (DB[subKey] && DB[subKey].chapters[chapIdx] && DB[subKey].chapters[chapIdx].questions) {
+        DB[subKey].chapters[chapIdx].questions.splice(qIdx, 1);
+        saveDatabase(DB);
+        alert("🗑️ Tanlangan savol bazadan muvaffaqiyatli o'chirildi!");
+        loadAdminDeleteQuestions(); // Ro'yxatni yangilash
+      } else {
+        alert("Xatolik yuz berdi!");
+      }
     }
 
     function navSwitch(tab) {
@@ -1112,19 +1132,26 @@
         showSubjects();
       } else if (tab === 'leaderboard') {
         showLeaderboard();
+      } else if (tab === 'admin') {
+        showAdminLogin();
       }
     }
 
     function updateNavButtons(activeTab) {
       const subBtn = document.getElementById('navSubjectsBtn');
       const leadBtn = document.getElementById('navLeaderboardBtn');
+      const adminBtn = document.getElementById('navAdminBtn');
+
+      subBtn.className = "flex flex-col items-center gap-1 text-slate-400 hover:text-slate-200 transition";
+      leadBtn.className = "flex flex-col items-center gap-1 text-slate-400 hover:text-slate-200 transition";
+      adminBtn.className = "flex flex-col items-center gap-1 text-slate-400 hover:text-slate-200 transition";
 
       if (activeTab === 'subjects') {
-        subBtn.className = "flex flex-col items-center gap-1 text-emerald-400 transition";
-        leadBtn.className = "flex flex-col items-center gap-1 text-slate-400 hover:text-slate-200 transition";
-      } else {
-        leadBtn.className = "flex flex-col items-center gap-1 text-emerald-400 transition";
-        subBtn.className = "flex flex-col items-center gap-1 text-slate-400 hover:text-slate-200 transition";
+        subBtn.className = "flex flex-col items-center gap-1 text-luxury-gold transition";
+      } else if (activeTab === 'leaderboard') {
+        leadBtn.className = "flex flex-col items-center gap-1 text-luxury-gold transition";
+      } else if (activeTab === 'admin') {
+        adminBtn.className = "flex flex-col items-center gap-1 text-purple-400 transition";
       }
     }
   </script>
