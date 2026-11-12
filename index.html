@@ -1,633 +1,357 @@
 <!DOCTYPE html>
-<html lang="uz" class="dark">
+<html lang="uz">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sohbat - Real-Time Chat Ilovasi</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts Inter -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                    },
-                    colors: {
-                        emeraldAccent: '#10b981',
-                        goldAccent: '#f59e0b',
-                        darkBg: '#090d16',
-                        cardBg: 'rgba(17, 24, 39, 0.7)',
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        /* Modern Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: rgba(15, 23, 42, 0.6);
-        }
-        ::-webkit-scrollbar-thumb {
-            background: rgba(51, 65, 85, 0.8);
-            border-radius: 9999px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: rgba(16, 185, 129, 0.5);
-        }
-        .glass-panel {
-            background: rgba(15, 23, 42, 0.75);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-        }
-        .glass-input {
-            background: rgba(30, 41, 59, 0.6);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        .glass-input:focus {
-            border-color: #10b981;
-            box-shadow: 0 0 15px rgba(16, 185, 129, 0.25);
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Real-Time Chat | Mukammal Versiya</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+  <style>
+    body {
+      background: radial-gradient(circle at top left, #0f172a, #020617);
+      min-height: 100vh;
+      color: #f8fafc;
+      font-family: system-ui, -apple-system, sans-serif;
+    }
+    .glass-card {
+      background: rgba(15, 23, 42, 0.8);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
+    }
+    .chat-scroll::-webkit-scrollbar {
+      width: 6px;
+    }
+    .chat-scroll::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 10px;
+    }
+  </style>
 </head>
-<body class="bg-darkBg text-slate-100 min-h-screen font-sans flex flex-col justify-between overflow-x-hidden selection:bg-emerald-500 selection:text-white">
+<body class="flex items-center justify-center p-3 md:p-6">
 
-    <!-- Background Animated Elements -->
-    <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-        <div class="absolute -top-40 -left-40 w-96 h-96 bg-emerald-600/20 rounded-full blur-3xl animate-pulse"></div>
-        <div class="absolute top-1/2 -right-40 w-96 h-96 bg-amber-500/15 rounded-full blur-3xl animate-pulse" style="animation-delay: 1.5s;"></div>
-        <div class="absolute -bottom-40 left-1/3 w-96 h-96 bg-cyan-600/15 rounded-full blur-3xl animate-pulse" style="animation-delay: 3s;"></div>
+  <div class="w-full max-w-md glass-card rounded-3xl p-5 md:p-7 relative overflow-hidden flex flex-col min-h-[600px] max-h-[90vh]">
+    
+    <!-- HEADER -->
+    <div class="flex items-center justify-between pb-4 border-b border-slate-800">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center shadow-lg shadow-cyan-500/20">
+          <i class="fa-solid fa-comments text-white text-lg"></i>
+        </div>
+        <div>
+          <h1 class="font-bold text-lg text-slate-100 tracking-wide">Sohbat Chat</h1>
+          <p id="roomInfoText" class="text-xs text-cyan-400 font-medium">Bosh sahifa</p>
+        </div>
+      </div>
+      <button id="leaveBtn" onclick="leaveChat()" class="hidden text-xs bg-red-500/10 text-red-400 hover:bg-red-500/20 px-3 py-1.5 rounded-xl border border-red-500/20 transition-all">
+        Chiqish
+      </button>
     </div>
 
-    <!-- App Main Container -->
-    <div id="app" class="relative z-10 flex-1 flex flex-col justify-center items-center p-3 sm:p-6 w-full max-w-5xl mx-auto min-h-screen">
-
-        <!-- Toast Notification Box -->
-        <div id="toast" class="fixed top-5 right-5 z-50 transform translate-y-[-150%] transition-transform duration-300 ease-out flex items-center gap-3 px-5 py-3.5 rounded-xl text-white shadow-2xl glass-panel border border-emerald-500/30">
-            <i id="toast-icon" class="fas fa-check-circle text-emerald-400 text-lg"></i>
-            <span id="toast-message" class="text-sm font-medium">Xabar yetkazildi</span>
-        </div>
-
-        <!-- ================= LANDING SCREEN ================= -->
-        <div id="screen-landing" class="w-full max-w-md flex flex-col items-center">
-            <!-- App Logo / Title -->
-            <div class="text-center mb-8">
-                <div class="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-tr from-emerald-600 to-amber-500 p-0.5 shadow-lg shadow-emerald-500/20 mb-4 transform hover:scale-105 transition-transform">
-                    <div class="w-full h-full bg-slate-950 rounded-[14px] flex items-center justify-center">
-                        <i class="fas fa-comments text-3xl bg-gradient-to-r from-emerald-400 to-amber-400 bg-clip-text text-transparent"></i>
-                    </div>
-                </div>
-                <h1 class="text-3xl font-extrabold tracking-tight bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">
-                    SOHBAT
-                </h1>
-                <p class="text-xs text-slate-400 mt-1 font-medium tracking-wide uppercase">Xavfsiz va tezkor real-vaqt chat</p>
-            </div>
-
-            <!-- Login Card -->
-            <div class="w-full glass-panel rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6">
-                <div>
-                    <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
-                        <i class="fas fa-user text-emerald-400 mr-1.5"></i> Ismingizni kiriting
-                    </label>
-                    <input type="text" id="input-username" placeholder="Masalan: Jasur" maxlength="20"
-                        class="w-full px-4 py-3.5 rounded-xl glass-input text-white placeholder-slate-500 focus:outline-none transition-all duration-200 font-medium">
-                </div>
-
-                <div class="space-y-3 pt-2">
-                    <button onclick="openModal('modal-create')" 
-                        class="w-full py-4 px-6 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-400 hover:to-emerald-500 text-slate-950 font-bold shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 transform active:scale-95 transition-all flex items-center justify-center gap-3">
-                        <i class="fas fa-plus-circle text-lg"></i>
-                        <span>Yangi Chat Yaratish</span>
-                    </button>
-
-                    <button onclick="openModal('modal-join')" 
-                        class="w-full py-4 px-6 rounded-xl bg-slate-800/80 hover:bg-slate-700/80 text-white font-semibold border border-slate-700/60 hover:border-slate-500 transform active:scale-95 transition-all flex items-center justify-center gap-3">
-                        <i class="fas fa-sign-in-alt text-lg text-amber-400"></i>
-                        <span>Mavjud Chatga Kirish</span>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Server Status Banner -->
-            <div class="mt-8 flex items-center gap-2 px-4 py-2 rounded-full glass-panel border border-slate-800 text-xs text-slate-400">
-                <span id="server-status-dot" class="w-2.5 h-2.5 rounded-full bg-amber-500 animate-ping"></span>
-                <span id="server-status-text">Serverga ulanmoqda...</span>
-            </div>
-        </div>
-
-        <!-- ================= CHAT ROOM SCREEN ================= -->
-        <div id="screen-chat" class="hidden w-full h-[92vh] max-h-[850px] glass-panel rounded-2xl sm:rounded-3xl shadow-2xl flex flex-col overflow-hidden border border-slate-800/80">
-            <!-- Chat Header -->
-            <div class="px-4 sm:px-6 py-4 bg-slate-900/90 border-b border-slate-800 flex items-center justify-between gap-3 flex-wrap sm:flex-nowrap">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
-                        <i class="fas fa-hashtag text-lg"></i>
-                    </div>
-                    <div>
-                        <div class="flex items-center gap-2">
-                            <span class="text-xs text-slate-400 font-medium">XONA KODI:</span>
-                            <span id="chat-room-code-display" class="font-mono font-bold text-emerald-400 tracking-wider">------</span>
-                            <button onclick="copyRoomCode()" class="text-slate-400 hover:text-white transition-colors p-1" title="Kodni nusxalash">
-                                <i class="fas fa-copy text-xs"></i>
-                            </button>
-                        </div>
-                        <p class="text-xs text-slate-400 flex items-center gap-1.5 mt-0.5">
-                            <span class="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                            <span id="online-users-count">Sohbatdoshlar: 1</span>
-                        </p>
-                    </div>
-                </div>
-
-                <div class="flex items-center gap-2">
-                    <button onclick="leaveChat()" class="px-3.5 py-2 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/20 text-xs font-semibold flex items-center gap-2 transition-all">
-                        <i class="fas fa-door-open"></i>
-                        <span>Chiqish</span>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Messages Container -->
-            <div id="messages-container" class="flex-1 p-4 sm:p-6 overflow-y-auto space-y-4 bg-slate-950/40">
-                <!-- Welcome Message / Empty State Placeholder -->
-                <div id="empty-messages-notice" class="text-center my-12 p-6 glass-panel rounded-2xl max-w-sm mx-auto">
-                    <i class="fas fa-lock text-3xl text-amber-400/80 mb-3"></i>
-                    <h3 class="text-sm font-semibold text-slate-200">Xona muvaffaqiyatli ulantirildi</h3>
-                    <p class="text-xs text-slate-400 mt-1">Chat kodini va parolini boshqa qurilmadagi do'stingizga bering va suhbatni boshlang!</p>
-                </div>
-            </div>
-
-            <!-- Chat Input Area -->
-            <div class="p-3 sm:p-4 bg-slate-900/95 border-t border-slate-800">
-                <form id="chat-form" onsubmit="sendMessage(event)" class="flex items-center gap-2">
-                    <input type="text" id="input-message" placeholder="Xabaringizni yozing..." autocomplete="off"
-                        class="flex-1 px-4 py-3.5 rounded-xl glass-input text-white text-sm placeholder-slate-500 focus:outline-none transition-all">
-                    <button type="submit" 
-                        class="px-5 py-3.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold shadow-lg shadow-emerald-500/20 active:scale-95 transition-all flex items-center justify-center">
-                        <i class="fas fa-paper-plane text-base"></i>
-                    </button>
-                </form>
-            </div>
-        </div>
-
+    <!-- NOTIFICATION ALERT -->
+    <div id="alertBox" class="hidden mt-3 p-3 rounded-xl text-xs font-medium border flex items-center justify-between transition-all">
+      <span id="alertMessage"></span>
+      <button onclick="hideAlert()" class="ml-2 text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
     </div>
 
-    <!-- ================= MODAL: CHAT YARATISH ================= -->
-    <div id="modal-create" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm hidden">
-        <div class="w-full max-w-md glass-panel rounded-3xl p-6 sm:p-8 shadow-2xl border border-slate-700/50 space-y-5 animate-in fade-in zoom-in duration-200">
-            <div class="flex items-center justify-between border-b border-slate-800 pb-4">
-                <h2 class="text-xl font-bold text-white flex items-center gap-2">
-                    <i class="fas fa-plus-circle text-emerald-400"></i> Yangi Chat Yaratish
-                </h2>
-                <button onclick="closeModal('modal-create')" class="text-slate-400 hover:text-white p-1">
-                    <i class="fas fa-times text-lg"></i>
-                </button>
-            </div>
-
-            <div class="space-y-4">
-                <div>
-                    <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
-                        Xona Kodi (Auto yoki O'zingiz kiriting)
-                    </label>
-                    <div class="relative">
-                        <input type="text" id="create-room-code" maxlength="10" placeholder="Masalan: CHAT77"
-                            class="w-full px-4 py-3 rounded-xl glass-input text-white uppercase tracking-wider font-mono font-bold focus:outline-none">
-                        <button type="button" onclick="generateRandomCode()" class="absolute right-2 top-2 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs text-slate-300">
-                            <i class="fas fa-random mr-1"></i> Auto
-                        </button>
-                    </div>
-                </div>
-
-                <div>
-                    <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
-                        Chat Paroli
-                    </label>
-                    <input type="password" id="create-room-password" maxlength="15" placeholder="Sirli parol kiriting"
-                        class="w-full px-4 py-3 rounded-xl glass-input text-white focus:outline-none">
-                </div>
-            </div>
-
-            <div class="pt-3">
-                <button onclick="submitCreateRoom()" 
-                    class="w-full py-3.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold shadow-lg shadow-emerald-500/20 active:scale-95 transition-all">
-                    Chatni Yaratish va Kirish
-                </button>
-            </div>
+    <!-- SCREEN 1: LOGIN & CHOICE -->
+    <div id="authScreen" class="flex-1 flex flex-col justify-center space-y-5 my-auto">
+      <div>
+        <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Ismingiz</label>
+        <div class="relative">
+          <i class="fa-solid fa-user absolute left-4 top-1/2 -translate-y-1/2 text-slate-500"></i>
+          <input type="text" id="usernameInput" placeholder="Masalan: Ali" class="w-full bg-slate-900/80 border border-slate-700/60 rounded-2xl py-3.5 pl-11 pr-4 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-cyan-500 transition-all">
         </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3 pt-2">
+        <button onclick="openTab('create')" class="w-full py-4 px-3 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-semibold rounded-2xl shadow-lg shadow-cyan-500/25 transition-all text-xs sm:text-sm flex flex-col items-center justify-center space-y-2">
+          <i class="fa-solid fa-plus-circle text-xl"></i>
+          <span>Chat Yaratish</span>
+        </button>
+        <button onclick="openTab('join')" class="w-full py-4 px-3 bg-slate-800 hover:bg-slate-700/80 border border-slate-700/60 text-slate-200 font-semibold rounded-2xl transition-all text-xs sm:text-sm flex flex-col items-center justify-center space-y-2">
+          <i class="fa-solid fa-right-to-bracket text-xl text-cyan-400"></i>
+          <span>Chatga Kirish</span>
+        </button>
+      </div>
     </div>
 
-    <!-- ================= MODAL: CHATGA KIRISH ================= -->
-    <div id="modal-join" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm hidden">
-        <div class="w-full max-w-md glass-panel rounded-3xl p-6 sm:p-8 shadow-2xl border border-slate-700/50 space-y-5 animate-in fade-in zoom-in duration-200">
-            <div class="flex items-center justify-between border-b border-slate-800 pb-4">
-                <h2 class="text-xl font-bold text-white flex items-center gap-2">
-                    <i class="fas fa-sign-in-alt text-amber-400"></i> Chatga Kirish
-                </h2>
-                <button onclick="closeModal('modal-join')" class="text-slate-400 hover:text-white p-1">
-                    <i class="fas fa-times text-lg"></i>
-                </button>
-            </div>
-
-            <div class="space-y-4">
-                <div>
-                    <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
-                        Xona Kodi
-                    </label>
-                    <input type="text" id="join-room-code" maxlength="10" placeholder="Kodni kiriting"
-                        class="w-full px-4 py-3 rounded-xl glass-input text-white uppercase tracking-wider font-mono font-bold focus:outline-none">
-                </div>
-
-                <div>
-                    <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
-                        Chat Paroli
-                    </label>
-                    <input type="password" id="join-room-password" maxlength="15" placeholder="Parolni kiriting"
-                        class="w-full px-4 py-3 rounded-xl glass-input text-white focus:outline-none">
-                </div>
-            </div>
-
-            <div class="pt-3">
-                <button onclick="submitJoinRoom()" 
-                    class="w-full py-3.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold shadow-lg shadow-amber-500/20 active:scale-95 transition-all">
-                    Xonaga Ulanish
-                </button>
-            </div>
-        </div>
+    <!-- SCREEN 2: CREATE CHAT FORM -->
+    <div id="createScreen" class="hidden flex-1 flex flex-col justify-center space-y-4 my-auto">
+      <h2 class="text-sm font-bold text-slate-300 uppercase tracking-wide text-center mb-2">Yangi Chat Yaratish</h2>
+      <div>
+        <label class="block text-xs font-medium text-slate-400 mb-1">Xona Paroli</label>
+        <input type="password" id="createPassword" placeholder="Parol kiriting" class="w-full bg-slate-900/80 border border-slate-700/60 rounded-2xl py-3 px-4 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-cyan-500 transition-all">
+      </div>
+      <div class="pt-2 flex space-x-3">
+        <button onclick="backToAuth()" class="w-1/3 py-3 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-2xl text-xs font-semibold">Orqaga</button>
+        <button onclick="createRoom()" class="w-2/3 py-3 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold rounded-2xl shadow-lg shadow-cyan-500/20 text-xs">Yaratish</button>
+      </div>
     </div>
 
-    <!-- Firebase Realtime App Backend Integration -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { 
-            getAuth, 
-            signInAnonymously, 
-            signInWithCustomToken, 
-            onAuthStateChanged 
-        } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { 
-            getFirestore, 
-            doc, 
-            getDoc, 
-            setDoc, 
-            collection, 
-            onSnapshot, 
-            addDoc, 
-            serverTimestamp 
-        } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+    <!-- SCREEN 3: JOIN CHAT FORM -->
+    <div id="joinScreen" class="hidden flex-1 flex flex-col justify-center space-y-4 my-auto">
+      <h2 class="text-sm font-bold text-slate-300 uppercase tracking-wide text-center mb-2">Mavjud Chatga Kirish</h2>
+      <div>
+        <label class="block text-xs font-medium text-slate-400 mb-1">Xona Kodi</label>
+        <input type="text" id="joinRoomId" placeholder="Masalan: 482910" class="w-full bg-slate-900/80 border border-slate-700/60 rounded-2xl py-3 px-4 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-cyan-500 transition-all font-mono tracking-widest">
+      </div>
+      <div>
+        <label class="block text-xs font-medium text-slate-400 mb-1">Xona Paroli</label>
+        <input type="password" id="joinPassword" placeholder="Parol" class="w-full bg-slate-900/80 border border-slate-700/60 rounded-2xl py-3 px-4 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-cyan-500 transition-all">
+      </div>
+      <div class="pt-2 flex space-x-3">
+        <button onclick="backToAuth()" class="w-1/3 py-3 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-2xl text-xs font-semibold">Orqaga</button>
+        <button onclick="joinRoom()" class="w-2/3 py-3 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-2xl shadow-lg shadow-blue-600/20 text-xs">Kirish</button>
+      </div>
+    </div>
 
-        // Global State Variable Standard Handlers
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'sohbat-realtime-chat-app';
-        const firebaseConfig = typeof __firebase_config !== 'undefined' 
-            ? JSON.parse(__firebase_config) 
-            : {
-                apiKey: "AIzaSyDemoPlaceholderOnly",
-                authDomain: "demo.firebaseapp.com",
-                projectId: "demo-project",
-                storageBucket: "demo.appspot.com",
-                messagingSenderId: "123456789",
-                appId: "1:123456789:web:demo"
-              };
+    <!-- SCREEN 4: CHAT ROOM INTERFACE -->
+    <div id="chatScreen" class="hidden flex-1 flex flex-col mt-4 min-h-0">
+      <!-- ROOM CODE DISPLAY BAR -->
+      <div class="bg-slate-900/60 border border-slate-800 rounded-2xl p-3 mb-3 flex items-center justify-between">
+        <div>
+          <span class="text-[10px] text-slate-400 uppercase tracking-wider block">Xona kodi (ulashing):</span>
+          <span id="displayRoomId" class="font-mono text-sm font-bold text-cyan-400">------</span>
+        </div>
+        <button onclick="copyRoomId()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1.5 rounded-xl text-xs flex items-center space-x-1 border border-slate-700/50">
+          <i class="fa-regular fa-copy"></i>
+          <span>Nusxalash</span>
+        </button>
+      </div>
 
-        // Initialize Firebase Backend
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
+      <!-- MESSAGES AREA -->
+      <div id="messagesList" class="flex-1 overflow-y-auto space-y-3 pr-1 chat-scroll my-2 flex flex-col">
+        <!-- Dinamik xabarlar shu yerga tushadi -->
+      </div>
 
-        // Application Local State Variables
-        let currentUser = null;
-        let currentUserName = '';
-        let currentRoomId = null;
-        let activeMessagesUnsubscribe = null;
+      <!-- MESSAGE INPUT FORM -->
+      <form onsubmit="sendMessage(event)" class="mt-2 flex items-center space-x-2">
+        <input type="text" id="messageInput" placeholder="Xabar yozing..." autocomplete="off" class="flex-1 bg-slate-900/90 border border-slate-700/60 rounded-2xl py-3 px-4 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-cyan-500 transition-all">
+        <button type="submit" class="w-11 h-11 bg-cyan-500 hover:bg-cyan-400 text-slate-950 rounded-2xl flex items-center justify-center font-bold shadow-lg shadow-cyan-500/20 transition-all shrink-0">
+          <i class="fa-solid fa-paper-plane"></i>
+        </button>
+      </form>
+    </div>
 
-        // System Auth Init logic
-        async function setupAuth() {
-            try {
-                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                    await signInWithCustomToken(auth, __initial_auth_token);
-                } else {
-                    await signInAnonymously(auth);
-                }
-            } catch (err) {
-                console.error("Auth Exception:", err);
-                // Fallback to anonymous sign in
-                try { await signInAnonymously(auth); } catch(e){}
-            }
-        }
+  </div>
 
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                currentUser = user;
-                document.getElementById('server-status-dot').className = 'w-2.5 h-2.5 rounded-full bg-emerald-400';
-                document.getElementById('server-status-text').innerText = 'Serverga ulandi (Tayyor)';
-            } else {
-                document.getElementById('server-status-dot').className = 'w-2.5 h-2.5 rounded-full bg-rose-500';
-                document.getElementById('server-status-text').innerText = 'Serverga ulanishda xato';
-            }
+  <!-- FIREBASE SDK & APP LOGIC -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { 
+      getFirestore, 
+      doc, 
+      setDoc, 
+      getDoc, 
+      collection, 
+      addDoc, 
+      onSnapshot, 
+      query, 
+      orderBy, 
+      serverTimestamp 
+    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    // Sizning Firebase konfiguratsiyangiz
+    const firebaseConfig = {
+      apiKey: "AIzaSyB4SqJS0ztxdUxRwOYx2NB5XiZTs-vsR6o",
+      authDomain: "chatchi-e8290.firebaseapp.com",
+      projectId: "chatchi-e8290",
+      storageBucket: "chatchi-e8290.firebasestorage.app",
+      messagingSenderId: "760473672419",
+      appId: "1:760473672419:web:15dc850a3b97f1b79c03d6",
+      measurementId: "G-5JZ9325HWW"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    let currentUser = "";
+    let currentRoomId = "";
+    let unsubscribeListener = null;
+
+    // XABARLARNI CHIQARISH VA OGOHLANTIRISH
+    window.showAlert = (msg, type = 'error') => {
+      const box = document.getElementById('alertBox');
+      const text = document.getElementById('alertMessage');
+      box.className = `mt-3 p-3 rounded-xl text-xs font-medium border flex items-center justify-between transition-all ${
+        type === 'error' ? 'bg-red-500/10 border-red-500/20 text-red-400' : 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400'
+      }`;
+      text.innerText = msg;
+      box.classList.remove('hidden');
+    };
+
+    window.hideAlert = () => {
+      document.getElementById('alertBox').classList.add('hidden');
+    };
+
+    window.openTab = (tab) => {
+      window.hideAlert();
+      const user = document.getElementById('usernameInput').value.trim();
+      if (!user) {
+        window.showAlert("Iltimos, avval o'z ismingizni kiriting!");
+        return;
+      }
+      currentUser = user;
+      document.getElementById('authScreen').classList.add('hidden');
+      if (tab === 'create') document.getElementById('createScreen').classList.remove('hidden');
+      if (tab === 'join') document.getElementById('joinScreen').classList.remove('hidden');
+    };
+
+    window.backToAuth = () => {
+      window.hideAlert();
+      document.getElementById('createScreen').classList.add('hidden');
+      document.getElementById('joinScreen').classList.add('hidden');
+      document.getElementById('authScreen').classList.remove('hidden');
+    };
+
+    // CHAT XONA YARATISH
+    window.createRoom = async () => {
+      window.hideAlert();
+      const pwd = document.getElementById('createPassword').value.trim();
+      if (!pwd) {
+        window.showAlert("Iltimos, xona uchun parol kiriting!");
+        return;
+      }
+
+      const generatedCode = Math.floor(100000 + Math.random() * 900000).toString();
+
+      try {
+        await setDoc(doc(db, "rooms", generatedCode), {
+          password: pwd,
+          createdAt: serverTimestamp(),
+          createdBy: currentUser
         });
 
-        setupAuth();
+        currentRoomId = generatedCode;
+        enterChatRoom();
+      } catch (e) {
+        window.showAlert("Xatolik yuz berdi: " + e.message);
+      }
+    };
 
-        // UI Toast Notification helper
-        window.showToast = function(msg, isError = false) {
-            const toast = document.getElementById('toast');
-            const toastMsg = document.getElementById('toast-message');
-            const toastIcon = document.getElementById('toast-icon');
+    // MAVJUD CHATGA KIRISH
+    window.joinRoom = async () => {
+      window.hideAlert();
+      const roomId = document.getElementById('joinRoomId').value.trim();
+      const pwd = document.getElementById('joinPassword').value.trim();
 
-            toastMsg.innerText = msg;
-            if (isError) {
-                toastIcon.className = "fas fa-exclamation-circle text-rose-400 text-lg";
-                toast.classList.remove('border-emerald-500/30');
-                toast.classList.add('border-rose-500/30');
-            } else {
-                toastIcon.className = "fas fa-check-circle text-emerald-400 text-lg";
-                toast.classList.remove('border-rose-500/30');
-                toast.classList.add('border-emerald-500/30');
-            }
+      if (!roomId || !pwd) {
+        window.showAlert("Xona kodi va parolini to'liq kiriting!");
+        return;
+      }
 
-            toast.classList.remove('translate-y-[-150%]');
-            toast.classList.add('translate-y-0');
+      try {
+        const roomRef = doc(db, "rooms", roomId);
+        const roomSnap = await getDoc(roomRef);
 
-            setTimeout(() => {
-                toast.classList.remove('translate-y-0');
-                toast.classList.add('translate-y-[-150%]');
-            }, 3000);
+        if (!roomSnap.exists()) {
+          window.showAlert("Bunday xona topilmadi!");
+          return;
         }
 
-        // Window level Helper functions for UI clicks
-        window.openModal = function(id) {
-            const username = document.getElementById('input-username').value.trim();
-            if (!username) {
-                window.showToast("Iltimos, avval ismingizni kiriting!", true);
-                document.getElementById('input-username').focus();
-                return;
-            }
-            if (id === 'modal-create') {
-                generateRandomCode();
-            }
-            document.getElementById(id).classList.remove('hidden');
+        if (roomSnap.data().password !== pwd) {
+          window.showAlert("Xona paroli noto'g'ri!");
+          return;
         }
 
-        window.closeModal = function(id) {
-            document.getElementById(id).classList.add('hidden');
-        }
+        currentRoomId = roomId;
+        enterChatRoom();
+      } catch (e) {
+        window.showAlert("Kirishda xatolik: " + e.message);
+      }
+    };
 
-        window.generateRandomCode = function() {
-            const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-            let result = '';
-            for (let i = 0; i < 6; i++) {
-                result += chars.charAt(Math.floor(Math.random() * chars.length));
-            }
-            document.getElementById('create-room-code').value = result;
-        }
+    // CHATGA KIRIB XABarlarni REAL VAQTDA O'QISH
+    function enterChatRoom() {
+      document.getElementById('createScreen').classList.add('hidden');
+      document.getElementById('joinScreen').classList.add('hidden');
+      document.getElementById('chatScreen').classList.remove('hidden');
+      document.getElementById('leaveBtn').classList.remove('hidden');
 
-        // Action 1: Create Room Logic
-        window.submitCreateRoom = async function() {
-            const nameInput = document.getElementById('input-username').value.trim();
-            const codeInput = document.getElementById('create-room-code').value.trim().toUpperCase();
-            const passInput = document.getElementById('create-room-password').value.trim();
+      document.getElementById('roomInfoText').innerText = `Xona: #${currentRoomId}`;
+      document.getElementById('displayRoomId').innerText = currentRoomId;
 
-            if (!nameInput) {
-                window.showToast("Ismingizni kiriting!", true);
-                return;
-            }
-            if (!codeInput || codeInput.length < 3) {
-                window.showToast("Yaroqli xona kodini kiriting!", true);
-                return;
-            }
-            if (!passInput) {
-                window.showToast("Xona uchun parol o'ylab toping!", true);
-                return;
-            }
+      const q = query(
+        collection(db, "rooms", currentRoomId, "messages"),
+        orderBy("createdAt", "asc")
+      );
 
-            if (!currentUser) {
-                window.showToast("Serverga ulanilmoqda, kuting...", true);
-                return;
-            }
+      unsubscribeListener = onSnapshot(q, (snapshot) => {
+        const messagesList = document.getElementById('messagesList');
+        messagesList.innerHTML = "";
 
-            currentUserName = nameInput;
+        snapshot.forEach((docSnap) => {
+          const data = docSnap.data();
+          const isMe = data.sender === currentUser;
 
-            try {
-                // Check if room already exists using strict rule path: /artifacts/{appId}/public/data/rooms
-                const roomDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'rooms', codeInput);
-                const roomSnap = await getDoc(roomDocRef);
+          const msgDiv = document.createElement('div');
+          msgDiv.className = `flex flex-col ${isMe ? 'items-end' : 'items-start'} my-1`;
 
-                if (roomSnap.exists()) {
-                    window.showToast("Bu kodli xona allaqachon mavjud. Boshqa kod kiriting!", true);
-                    return;
-                }
+          const content = `
+            <span class="text-[10px] text-slate-400 px-1 mb-0.5">${escapeHtml(data.sender || 'Noma\'lum')}</span>
+            <div class="max-w-[80%] rounded-2xl py-2 px-3.5 text-xs sm:text-sm ${
+              isMe 
+                ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-br-none shadow-md shadow-cyan-500/10' 
+                : 'bg-slate-800 text-slate-200 rounded-bl-none border border-slate-700/50'
+            }">
+              ${escapeHtml(data.text || '')}
+            </div>
+          `;
+          msgDiv.innerHTML = content;
+          messagesList.appendChild(msgDiv);
+        });
 
-                // Create new room document
-                await setDoc(roomDocRef, {
-                    code: codeInput,
-                    password: passInput,
-                    createdBy: currentUser.uid,
-                    createdByName: currentUserName,
-                    createdAt: serverTimestamp()
-                });
+        messagesList.scrollTop = messagesList.scrollHeight;
+      }, (err) => {
+        window.showAlert("Ulanish xatosi: " + err.message);
+      });
+    }
 
-                closeModal('modal-create');
-                enterChatRoom(codeInput);
-                window.showToast("Chat muvaffaqiyatli yaratildi!");
-            } catch (err) {
-                console.error("Room creation error:", err);
-                window.showToast("Xona yaratishda xatolik yuz berdi!", true);
-            }
-        }
+    // XABAR YUBORISH
+    window.sendMessage = async (e) => {
+      e.preventDefault();
+      const input = document.getElementById('messageInput');
+      const text = input.value.trim();
+      if (!text || !currentRoomId) return;
 
-        // Action 2: Join Existing Room Logic
-        window.submitJoinRoom = async function() {
-            const nameInput = document.getElementById('input-username').value.trim();
-            const codeInput = document.getElementById('join-room-code').value.trim().toUpperCase();
-            const passInput = document.getElementById('join-room-password').value.trim();
+      input.value = "";
 
-            if (!nameInput) {
-                window.showToast("Ismingizni kiriting!", true);
-                return;
-            }
-            if (!codeInput) {
-                window.showToast("Xona kodini kiriting!", true);
-                return;
-            }
-            if (!passInput) {
-                window.showToast("Xona parolini kiriting!", true);
-                return;
-            }
+      try {
+        await addDoc(collection(db, "rooms", currentRoomId, "messages"), {
+          text: text,
+          sender: currentUser,
+          createdAt: serverTimestamp()
+        });
+      } catch (err) {
+        window.showAlert("Xabar yuborilmadi: " + err.message);
+      }
+    };
 
-            if (!currentUser) {
-                window.showToast("Serverga ulanilmoqda, kuting...", true);
-                return;
-            }
+    // CHATDAN CHIQISH
+    window.leaveChat = () => {
+      if (unsubscribeListener) unsubscribeListener();
+      currentRoomId = "";
+      document.getElementById('chatScreen').classList.add('hidden');
+      document.getElementById('leaveBtn').classList.add('hidden');
+      document.getElementById('roomInfoText').innerText = "Bosh sahifa";
+      document.getElementById('authScreen').classList.remove('hidden');
+    };
 
-            currentUserName = nameInput;
+    // XONANI NUSXALASH
+    window.copyRoomId = () => {
+      navigator.clipboard.writeText(currentRoomId);
+      window.showAlert("Xona kodi nusxalandi!", "success");
+    };
 
-            try {
-                const roomDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'rooms', codeInput);
-                const roomSnap = await getDoc(roomDocRef);
-
-                if (!roomSnap.exists()) {
-                    window.showToast("Bunday xona topilmadi!", true);
-                    return;
-                }
-
-                const roomData = roomSnap.data();
-                if (roomData.password !== passInput) {
-                    window.showToast("Parol noto'g'ri!", true);
-                    return;
-                }
-
-                closeModal('modal-join');
-                enterChatRoom(codeInput);
-                window.showToast("Xonaga muvaffaqiyatli kirdingiz!");
-            } catch (err) {
-                console.error("Room join error:", err);
-                window.showToast("Xonaga kirishda xatolik!", true);
-            }
-        }
-
-        // Switch Screen & Start Realtime Messages Listener
-        function enterChatRoom(roomCode) {
-            currentRoomId = roomCode;
-
-            // UI Switches
-            document.getElementById('screen-landing').classList.add('hidden');
-            document.getElementById('screen-chat').classList.remove('hidden');
-            document.getElementById('chat-room-code-display').innerText = roomCode;
-
-            // Listen for Messages in Real-Time
-            // Path: /artifacts/{appId}/public/data/rooms/{roomCode}/messages
-            const messagesCollectionRef = collection(db, 'artifacts', appId, 'public', 'data', 'rooms', roomCode, 'messages');
-
-            // Unsubscribe existing listener if any
-            if (activeMessagesUnsubscribe) {
-                activeMessagesUnsubscribe();
-            }
-
-            activeMessagesUnsubscribe = onSnapshot(messagesCollectionRef, (snapshot) => {
-                const messagesArr = [];
-                snapshot.forEach((doc) => {
-                    messagesArr.push({ id: doc.id, ...doc.data() });
-                });
-
-                // Rule 2 compliant: Sort in JS Memory
-                messagesArr.sort((a, b) => {
-                    const timeA = a.timestamp?.toMillis ? a.timestamp.toMillis() : (a.localTime || 0);
-                    const timeB = b.timestamp?.toMillis ? b.timestamp.toMillis() : (b.localTime || 0);
-                    return timeA - timeB;
-                });
-
-                renderMessages(messagesArr);
-            }, (error) => {
-                console.error("Messages listener error:", error);
-            });
-        }
-
-        // Render Message Bubbles in Chat Window
-        function renderMessages(messages) {
-            const container = document.getElementById('messages-container');
-            const emptyNotice = document.getElementById('empty-messages-notice');
-
-            if (messages.length > 0 && emptyNotice) {
-                emptyNotice.remove();
-            }
-
-            // Simple user tracker count estimation
-            const uniqueUsers = new Set(messages.map(m => m.senderName));
-            if (uniqueUsers.size > 0) {
-                document.getElementById('online-users-count').innerText = `Sohbatdoshlar: ${uniqueUsers.size}`;
-            }
-
-            container.innerHTML = '';
-
-            messages.forEach((msg) => {
-                const isMe = msg.senderId === currentUser.uid;
-                const msgWrapper = document.createElement('div');
-                msgWrapper.className = `flex flex-col ${isMe ? 'items-end' : 'items-start'} my-2`;
-
-                const timeStr = msg.timestamp?.toDate 
-                    ? msg.timestamp.toDate().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-                    : new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-
-                msgWrapper.innerHTML = `
-                    <div class="flex items-center gap-2 mb-1 px-1">
-                        <span class="text-[11px] font-semibold ${isMe ? 'text-emerald-400' : 'text-amber-400'}">${escapeHtml(msg.senderName)}</span>
-                        <span class="text-[10px] text-slate-500">${timeStr}</span>
-                    </div>
-                    <div class="max-w-[82%] sm:max-w-[70%] px-4 py-2.5 rounded-2xl text-sm leading-relaxed shadow-md break-words ${
-                        isMe 
-                            ? 'bg-gradient-to-r from-emerald-600 to-emerald-500 text-slate-950 rounded-tr-none font-medium' 
-                            : 'bg-slate-800 border border-slate-700/70 text-slate-100 rounded-tl-none'
-                    }">
-                        ${escapeHtml(msg.text)}
-                    </div>
-                `;
-                container.appendChild(msgWrapper);
-            });
-
-            // Scroll to bottom
-            container.scrollTop = container.scrollHeight;
-        }
-
-        // Action 3: Send Message Logic
-        window.sendMessage = async function(e) {
-            e.preventDefault();
-            const inputEl = document.getElementById('input-message');
-            const text = inputEl.value.trim();
-
-            if (!text || !currentRoomId || !currentUser) return;
-
-            inputEl.value = '';
-
-            try {
-                const messagesColRef = collection(db, 'artifacts', appId, 'public', 'data', 'rooms', currentRoomId, 'messages');
-                await addDoc(messagesColRef, {
-                    text: text,
-                    senderId: currentUser.uid,
-                    senderName: currentUserName,
-                    timestamp: serverTimestamp(),
-                    localTime: Date.now()
-                });
-            } catch (err) {
-                console.error("Message send error:", err);
-                window.showToast("Xabarni yuborishda xatolik!", true);
-            }
-        }
-
-        // Action 4: Leave Chat Room
-        window.leaveChat = function() {
-            if (activeMessagesUnsubscribe) {
-                activeMessagesUnsubscribe();
-                activeMessagesUnsubscribe = null;
-            }
-            currentRoomId = null;
-            document.getElementById('screen-chat').classList.add('hidden');
-            document.getElementById('screen-landing').classList.remove('hidden');
-            window.showToast("Chatdan chiqdingiz");
-        }
-
-        // Action 5: Copy Room Code to Clipboard
-        window.copyRoomCode = function() {
-            if (!currentRoomId) return;
-            const tempInput = document.createElement('input');
-            tempInput.value = currentRoomId;
-            document.body.appendChild(tempInput);
-            tempInput.select();
-            document.execCommand('copy');
-            document.body.removeChild(tempInput);
-            window.showToast("Xona kodi nusxalandi!");
-        }
-
-        // Helper to escape HTML tags to prevent XSS
-        function escapeHtml(str) {
-            return (str || '').replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
-        }
-    </script>
+    function escapeHtml(text) {
+      return text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+  </script>
 </body>
 </html>
