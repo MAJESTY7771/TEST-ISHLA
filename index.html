@@ -1,356 +1,1011 @@
 <!DOCTYPE html>
-<html lang="uz">
+<html lang="uz" class="dark">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Real-Time Chat | Mukammal Versiya</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Sohbat Ultra - NextGen Chat</title>
+  
+  <!-- Tailwind CSS & FontAwesome Icons -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'sans-serif'],
+          },
+          colors: {
+            tgDark: '#0e1621',
+            tgPanel: '#17212b',
+            tgAccent: '#2b5278',
+            instaPurple: '#833ab4',
+            instaPink: '#fd1d1d',
+            instaOrange: '#fcb045',
+            neonCyan: '#00f2fe',
+            neonBlue: '#4facfe'
+          }
+        }
+      }
+    }
+  </script>
+
   <style>
     body {
-      background: radial-gradient(circle at top left, #0f172a, #020617);
-      min-height: 100vh;
-      color: #f8fafc;
-      font-family: system-ui, -apple-system, sans-serif;
+      background: radial-gradient(circle at 10% 20%, #0f172a 0%, #05050a 90%);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
     }
-    .glass-card {
-      background: rgba(15, 23, 42, 0.8);
+    
+    .glass-tg {
+      background: rgba(23, 33, 43, 0.85);
       backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
       border: 1px solid rgba(255, 255, 255, 0.08);
-      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
     }
-    .chat-scroll::-webkit-scrollbar {
-      width: 6px;
+
+    .insta-gradient-bg {
+      background: linear-gradient(45deg, #833ab4, #fd1d1d, #fcb045);
     }
-    .chat-scroll::-webkit-scrollbar-thumb {
+
+    .insta-gradient-border {
+      border: 2px solid transparent;
+      background-image: linear-gradient(#17212b, #17212b), linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+      background-origin: border-box;
+      background-clip: padding-box, border-box;
+    }
+
+    .custom-scroll::-webkit-scrollbar {
+      width: 5px;
+    }
+    .custom-scroll::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
       background: rgba(255, 255, 255, 0.15);
       border-radius: 10px;
     }
-  </style>
-</head>
-<body class="flex items-center justify-center p-3 md:p-6">
 
-  <div class="w-full max-w-md glass-card rounded-3xl p-5 md:p-7 relative overflow-hidden flex flex-col min-h-[600px] max-h-[90vh]">
-    
-    <!-- HEADER -->
-    <div class="flex items-center justify-between pb-4 border-b border-slate-800">
-      <div class="flex items-center space-x-3">
-        <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center shadow-lg shadow-cyan-500/20">
-          <i class="fa-solid fa-comments text-white text-lg"></i>
-        </div>
-        <div>
-          <h1 class="font-bold text-lg text-slate-100 tracking-wide">Sohbat Chat</h1>
-          <p id="roomInfoText" class="text-xs text-cyan-400 font-medium">Bosh sahifa</p>
-        </div>
-      </div>
-      <button id="leaveBtn" onclick="leaveChat()" class="hidden text-xs bg-red-500/10 text-red-400 hover:bg-red-500/20 px-3 py-1.5 rounded-xl border border-red-500/20 transition-all">
-        Chiqish
-      </button>
-    </div>
-
-    <!-- NOTIFICATION ALERT -->
-    <div id="alertBox" class="hidden mt-3 p-3 rounded-xl text-xs font-medium border flex items-center justify-between transition-all">
-      <span id="alertMessage"></span>
-      <button onclick="hideAlert()" class="ml-2 text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
-    </div>
-
-    <!-- SCREEN 1: LOGIN & CHOICE -->
-    <div id="authScreen" class="flex-1 flex flex-col justify-center space-y-5 my-auto">
-      <div>
-        <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Ismingiz</label>
-        <div class="relative">
-          <i class="fa-solid fa-user absolute left-4 top-1/2 -translate-y-1/2 text-slate-500"></i>
-          <input type="text" id="usernameInput" placeholder="Masalan: Ali" class="w-full bg-slate-900/80 border border-slate-700/60 rounded-2xl py-3.5 pl-11 pr-4 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-cyan-500 transition-all">
-        </div>
-      </div>
-
-      <div class="grid grid-cols-2 gap-3 pt-2">
-        <button onclick="openTab('create')" class="w-full py-4 px-3 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-semibold rounded-2xl shadow-lg shadow-cyan-500/25 transition-all text-xs sm:text-sm flex flex-col items-center justify-center space-y-2">
-          <i class="fa-solid fa-plus-circle text-xl"></i>
-          <span>Chat Yaratish</span>
-        </button>
-        <button onclick="openTab('join')" class="w-full py-4 px-3 bg-slate-800 hover:bg-slate-700/80 border border-slate-700/60 text-slate-200 font-semibold rounded-2xl transition-all text-xs sm:text-sm flex flex-col items-center justify-center space-y-2">
-          <i class="fa-solid fa-right-to-bracket text-xl text-cyan-400"></i>
-          <span>Chatga Kirish</span>
-        </button>
-      </div>
-    </div>
-
-    <!-- SCREEN 2: CREATE CHAT FORM -->
-    <div id="createScreen" class="hidden flex-1 flex flex-col justify-center space-y-4 my-auto">
-      <h2 class="text-sm font-bold text-slate-300 uppercase tracking-wide text-center mb-2">Yangi Chat Yaratish</h2>
-      <div>
-        <label class="block text-xs font-medium text-slate-400 mb-1">Xona Paroli</label>
-        <input type="password" id="createPassword" placeholder="Parol kiriting" class="w-full bg-slate-900/80 border border-slate-700/60 rounded-2xl py-3 px-4 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-cyan-500 transition-all">
-      </div>
-      <div class="pt-2 flex space-x-3">
-        <button onclick="backToAuth()" class="w-1/3 py-3 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-2xl text-xs font-semibold">Orqaga</button>
-        <button onclick="createRoom()" class="w-2/3 py-3 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold rounded-2xl shadow-lg shadow-cyan-500/20 text-xs">Yaratish</button>
-      </div>
-    </div>
-
-    <!-- SCREEN 3: JOIN CHAT FORM -->
-    <div id="joinScreen" class="hidden flex-1 flex flex-col justify-center space-y-4 my-auto">
-      <h2 class="text-sm font-bold text-slate-300 uppercase tracking-wide text-center mb-2">Mavjud Chatga Kirish</h2>
-      <div>
-        <label class="block text-xs font-medium text-slate-400 mb-1">Xona Kodi</label>
-        <input type="text" id="joinRoomId" placeholder="Masalan: 482910" class="w-full bg-slate-900/80 border border-slate-700/60 rounded-2xl py-3 px-4 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-cyan-500 transition-all font-mono tracking-widest">
-      </div>
-      <div>
-        <label class="block text-xs font-medium text-slate-400 mb-1">Xona Paroli</label>
-        <input type="password" id="joinPassword" placeholder="Parol" class="w-full bg-slate-900/80 border border-slate-700/60 rounded-2xl py-3 px-4 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-cyan-500 transition-all">
-      </div>
-      <div class="pt-2 flex space-x-3">
-        <button onclick="backToAuth()" class="w-1/3 py-3 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-2xl text-xs font-semibold">Orqaga</button>
-        <button onclick="joinRoom()" class="w-2/3 py-3 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-2xl shadow-lg shadow-blue-600/20 text-xs">Kirish</button>
-      </div>
-    </div>
-
-    <!-- SCREEN 4: CHAT ROOM INTERFACE -->
-    <div id="chatScreen" class="hidden flex-1 flex flex-col mt-4 min-h-0">
-      <!-- ROOM CODE DISPLAY BAR -->
-      <div class="bg-slate-900/60 border border-slate-800 rounded-2xl p-3 mb-3 flex items-center justify-between">
-        <div>
-          <span class="text-[10px] text-slate-400 uppercase tracking-wider block">Xona kodi (ulashing):</span>
-          <span id="displayRoomId" class="font-mono text-sm font-bold text-cyan-400">------</span>
-        </div>
-        <button onclick="copyRoomId()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1.5 rounded-xl text-xs flex items-center space-x-1 border border-slate-700/50">
-          <i class="fa-regular fa-copy"></i>
-          <span>Nusxalash</span>
-        </button>
-      </div>
-
-      <!-- MESSAGES AREA -->
-      <div id="messagesList" class="flex-1 overflow-y-auto space-y-3 pr-1 chat-scroll my-2 flex flex-col">
-        <!-- Dinamik xabarlar shu yerga tushadi -->
-      </div>
-
-      <!-- MESSAGE INPUT FORM -->
-      <form onsubmit="sendMessage(event)" class="mt-2 flex items-center space-x-2">
-        <input type="text" id="messageInput" placeholder="Xabar yozing..." autocomplete="off" class="flex-1 bg-slate-900/90 border border-slate-700/60 rounded-2xl py-3 px-4 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-cyan-500 transition-all">
-        <button type="submit" class="w-11 h-11 bg-cyan-500 hover:bg-cyan-400 text-slate-950 rounded-2xl flex items-center justify-center font-bold shadow-lg shadow-cyan-500/20 transition-all shrink-0">
-          <i class="fa-solid fa-paper-plane"></i>
-        </button>
-      </form>
-    </div>
-
-  </div>
-
-  <!-- FIREBASE SDK & APP LOGIC -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { 
-      getFirestore, 
-      doc, 
-      setDoc, 
-      getDoc, 
-      collection, 
-      addDoc, 
-      onSnapshot, 
-      query, 
-      orderBy, 
-      serverTimestamp 
-    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-    // Sizning Firebase konfiguratsiyangiz
-    const firebaseConfig = {
-      apiKey: "AIzaSyB4SqJS0ztxdUxRwOYx2NB5XiZTs-vsR6o",
-      authDomain: "chatchi-e8290.firebaseapp.com",
-      projectId: "chatchi-e8290",
-      storageBucket: "chatchi-e8290.firebasestorage.app",
-      messagingSenderId: "760473672419",
-      appId: "1:760473672419:web:15dc850a3b97f1b79c03d6",
-      measurementId: "G-5JZ9325HWW"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-
-    let currentUser = "";
-    let currentRoomId = "";
-    let unsubscribeListener = null;
-
-    // XABARLARNI CHIQARISH VA OGOHLANTIRISH
-    window.showAlert = (msg, type = 'error') => {
-      const box = document.getElementById('alertBox');
-      const text = document.getElementById('alertMessage');
-      box.className = `mt-3 p-3 rounded-xl text-xs font-medium border flex items-center justify-between transition-all ${
-        type === 'error' ? 'bg-red-500/10 border-red-500/20 text-red-400' : 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400'
-      }`;
-      text.innerText = msg;
-      box.classList.remove('hidden');
-    };
-
-    window.hideAlert = () => {
-      document.getElementById('alertBox').classList.add('hidden');
-    };
-
-    window.openTab = (tab) => {
-      window.hideAlert();
-      const user = document.getElementById('usernameInput').value.trim();
-      if (!user) {
-        window.showAlert("Iltimos, avval o'z ismingizni kiriting!");
-        return;
-      }
-      currentUser = user;
-      document.getElementById('authScreen').classList.add('hidden');
-      if (tab === 'create') document.getElementById('createScreen').classList.remove('hidden');
-      if (tab === 'join') document.getElementById('joinScreen').classList.remove('hidden');
-    };
-
-    window.backToAuth = () => {
-      window.hideAlert();
-      document.getElementById('createScreen').classList.add('hidden');
-      document.getElementById('joinScreen').classList.add('hidden');
-      document.getElementById('authScreen').classList.remove('hidden');
-    };
-
-    // CHAT XONA YARATISH
-    window.createRoom = async () => {
-      window.hideAlert();
-      const pwd = document.getElementById('createPassword').value.trim();
-      if (!pwd) {
-        window.showAlert("Iltimos, xona uchun parol kiriting!");
-        return;
-      }
-
-      const generatedCode = Math.floor(100000 + Math.random() * 900000).toString();
-
-      try {
-        await setDoc(doc(db, "rooms", generatedCode), {
-          password: pwd,
-          createdAt: serverTimestamp(),
-          createdBy: currentUser
-        });
-
-        currentRoomId = generatedCode;
-        enterChatRoom();
-      } catch (e) {
-        window.showAlert("Xatolik yuz berdi: " + e.message);
-      }
-    };
-
-    // MAVJUD CHATGA KIRISH
-    window.joinRoom = async () => {
-      window.hideAlert();
-      const roomId = document.getElementById('joinRoomId').value.trim();
-      const pwd = document.getElementById('joinPassword').value.trim();
-
-      if (!roomId || !pwd) {
-        window.showAlert("Xona kodi va parolini to'liq kiriting!");
-        return;
-      }
-
-      try {
-        const roomRef = doc(db, "rooms", roomId);
-        const roomSnap = await getDoc(roomRef);
-
-        if (!roomSnap.exists()) {
-          window.showAlert("Bunday xona topilmadi!");
-          return;
-        }
-
-        if (roomSnap.data().password !== pwd) {
-          window.showAlert("Xona paroli noto'g'ri!");
-          return;
-        }
-
-        currentRoomId = roomId;
-        enterChatRoom();
-      } catch (e) {
-        window.showAlert("Kirishda xatolik: " + e.message);
-      }
-    };
-
-    // CHATGA KIRIB XABarlarni REAL VAQTDA O'QISH
-    function enterChatRoom() {
-      document.getElementById('createScreen').classList.add('hidden');
-      document.getElementById('joinScreen').classList.add('hidden');
-      document.getElementById('chatScreen').classList.remove('hidden');
-      document.getElementById('leaveBtn').classList.remove('hidden');
-
-      document.getElementById('roomInfoText').innerText = `Xona: #${currentRoomId}`;
-      document.getElementById('displayRoomId').innerText = currentRoomId;
-
-      const q = query(
-        collection(db, "rooms", currentRoomId, "messages"),
-        orderBy("createdAt", "asc")
-      );
-
-      unsubscribeListener = onSnapshot(q, (snapshot) => {
-        const messagesList = document.getElementById('messagesList');
-        messagesList.innerHTML = "";
-
-        snapshot.forEach((docSnap) => {
-          const data = docSnap.data();
-          const isMe = data.sender === currentUser;
-
-          const msgDiv = document.createElement('div');
-          msgDiv.className = `flex flex-col ${isMe ? 'items-end' : 'items-start'} my-1`;
-
-          const content = `
-            <span class="text-[10px] text-slate-400 px-1 mb-0.5">${escapeHtml(data.sender || 'Noma\'lum')}</span>
-            <div class="max-w-[80%] rounded-2xl py-2 px-3.5 text-xs sm:text-sm ${
-              isMe 
-                ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-br-none shadow-md shadow-cyan-500/10' 
-                : 'bg-slate-800 text-slate-200 rounded-bl-none border border-slate-700/50'
-            }">
-              ${escapeHtml(data.text || '')}
-            </div>
-          `;
-          msgDiv.innerHTML = content;
-          messagesList.appendChild(msgDiv);
-        });
-
-        messagesList.scrollTop = messagesList.scrollHeight;
-      }, (err) => {
-        window.showAlert("Ulanish xatosi: " + err.message);
-      });
+    /* Telegram Circular Video Note Style */
+    .video-note-container {
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 3px solid #00f2fe;
+      box-shadow: 0 0 20px rgba(0, 242, 254, 0.4);
+      position: relative;
     }
 
-    // XABAR YUBORISH
-    window.sendMessage = async (e) => {
-      e.preventDefault();
-      const input = document.getElementById('messageInput');
-      const text = input.value.trim();
-      if (!text || !currentRoomId) return;
+    .video-note-preview {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      object-fit: cover;
+      transform: scaleX(-1);
+    }
 
-      input.value = "";
+    /* Pulse wave for audio recording */
+    @keyframes pulse-ring {
+      0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+      70% { transform: scale(1.05); box-shadow: 0 0 0 12px rgba(239, 68, 68, 0); }
+      100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+    }
+    .recording-pulse {
+      animation: pulse-ring 1.5s infinite;
+    }
+  </style>
+</head>
+<body class="h-screen w-screen overflow-hidden flex items-center justify-center p-0 md:p-4 text-slate-100">
+
+  <!-- Main Container Layout (Telegram Desktop + Instagram Aesthetic) -->
+  <div class="w-full h-full max-w-5xl md:h-[94vh] glass-tg md:rounded-3xl flex flex-col overflow-hidden relative border border-slate-800">
+    
+    <!-- SYSTEM ALERT TOAST -->
+    <div id="toast" class="absolute top-5 left-1/2 -translate-x-1/2 z-50 transform -translate-y-20 transition-all duration-300 ease-out px-5 py-3 rounded-2xl glass-tg border border-cyan-500/40 shadow-2xl flex items-center space-x-3 pointer-events-none">
+      <i id="toastIcon" class="fa-solid fa-circle-info text-cyan-400"></i>
+      <span id="toastMsg" class="text-xs font-semibold text-slate-200"></span>
+    </div>
+
+    <!-- MAIN HEADER -->
+    <header class="h-16 px-4 md:px-6 bg-slate-900/90 border-b border-slate-800 flex items-center justify-between z-20 shrink-0">
+      <div class="flex items-center space-x-3">
+        <!-- Secret trigger for Admin Panel (5 clicks on logo icon) -->
+        <div id="appLogoBtn" class="w-10 h-10 rounded-2xl insta-gradient-bg flex items-center justify-center shadow-lg shadow-pink-500/20 cursor-pointer active:scale-95 transition-transform" title="Sohbat Ultra">
+          <i class="fa-paper-plane fa-solid text-white text-lg"></i>
+        </div>
+        <div>
+          <div class="flex items-center space-x-2">
+            <h1 class="font-bold text-base md:text-lg tracking-wide bg-gradient-to-r from-cyan-400 via-pink-500 to-amber-400 bg-clip-text text-transparent">
+              SOHBAT ULTRA
+            </h1>
+            <span id="adminBadge" class="hidden px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-400 border border-rose-500/30 text-[9px] font-extrabold uppercase">
+              ADMIN MODE
+            </span>
+          </div>
+          <p id="headerStatus" class="text-[11px] text-slate-400 font-medium">Bosh Sahifa</p>
+        </div>
+      </div>
+
+      <!-- Action Controls (Call / Room Info / Admin / Leave) -->
+      <div id="headerActions" class="flex items-center space-x-2">
+        <!-- Live Call Buttons (Only in Active Chat) -->
+        <div id="callControlGroup" class="hidden flex items-center space-x-1.5 mr-2">
+          <button onclick="initiateCall('audio')" class="w-9 h-9 rounded-xl bg-slate-800 hover:bg-slate-700 text-cyan-400 flex items-center justify-center transition-all border border-slate-700/60" title="Ovozli qo'ng'iroq">
+            <i class="fa-solid fa-phone text-xs"></i>
+          </button>
+          <button onclick="initiateCall('video')" class="w-9 h-9 rounded-xl bg-slate-800 hover:bg-slate-700 text-pink-400 flex items-center justify-center transition-all border border-slate-700/60" title="Video qo'ng'iroq">
+            <i class="fa-solid fa-video text-xs"></i>
+          </button>
+        </div>
+
+        <button id="adminShortcutBtn" onclick="promptAdminAuth()" class="w-9 h-9 rounded-xl bg-slate-800/80 text-amber-400 hover:bg-slate-700 border border-amber-500/20 flex items-center justify-center transition-all" title="Admin Kirish">
+          <i class="fa-solid fa-user-shield text-xs"></i>
+        </button>
+
+        <button id="leaveChatBtn" onclick="leaveChatRoom()" class="hidden px-3.5 py-2 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/20 text-xs font-semibold flex items-center space-x-1.5 transition-all">
+          <i class="fa-solid fa-door-open"></i>
+          <span class="hidden sm:inline">Chiqish</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- WORKSPACE BODY -->
+    <main class="flex-1 relative flex overflow-hidden">
+
+      <!-- ================= 1. AUTH & ROOM SELECTOR SCREEN ================= -->
+      <section id="screenAuth" class="w-full h-full flex flex-col items-center justify-center p-4 overflow-y-auto">
+        <div class="w-full max-w-sm space-y-6 text-center">
+          
+          <div class="space-y-2">
+            <div class="inline-block p-4 rounded-3xl bg-slate-800/50 border border-slate-700/50 mb-2">
+              <i class="fa-solid fa-comments text-4xl bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent"></i>
+            </div>
+            <h2 class="text-2xl font-extrabold text-slate-100">Xush kelibsiz!</h2>
+            <p class="text-xs text-slate-400 max-w-xs mx-auto">Telegram va Instagram funksiyalari mujassam real-vaqt muloqot platformasi.</p>
+          </div>
+
+          <!-- User Name Input -->
+          <div class="text-left space-y-1">
+            <label class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Ismingiz</label>
+            <div class="relative">
+              <i class="fa-solid fa-user-ninja absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 text-sm"></i>
+              <input type="text" id="inputUsername" placeholder="Masalan: Sardor" maxlength="25"
+                class="w-full bg-slate-900/90 border border-slate-700/80 rounded-2xl py-3.5 pl-11 pr-4 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-cyan-500 transition-all font-medium">
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="grid grid-cols-2 gap-3">
+            <button onclick="openModal('modalCreate')" class="py-4 px-3 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-extrabold rounded-2xl shadow-lg shadow-cyan-500/20 active:scale-95 transition-all text-xs flex flex-col items-center justify-center space-y-1.5">
+              <i class="fa-solid fa-plus-circle text-lg"></i>
+              <span>CHAT YARATISH</span>
+            </button>
+            <button onclick="openModal('modalJoin')" class="py-4 px-3 bg-slate-800/90 hover:bg-slate-700/90 text-slate-100 font-bold rounded-2xl border border-slate-700/80 active:scale-95 transition-all text-xs flex flex-col items-center justify-center space-y-1.5">
+              <i class="fa-solid fa-right-to-bracket text-lg text-amber-400"></i>
+              <span>CHATGA KIRISH</span>
+            </button>
+          </div>
+
+          <p class="text-[10px] text-slate-500">Boshqa qurilmadan kirish uchun xona kodi hamda parolidan foydalaniladi.</p>
+        </div>
+      </section>
+
+      <!-- ================= 2. CHAT ROOM SCREEN ================= -->
+      <section id="screenChat" class="hidden w-full h-full flex flex-col bg-slate-950/40">
+        
+        <!-- Room Code & Info Bar -->
+        <div class="px-4 py-2.5 bg-slate-900/60 border-b border-slate-800 flex items-center justify-between text-xs">
+          <div class="flex items-center space-x-2">
+            <span class="text-slate-400 font-medium">XONA KODI:</span>
+            <span id="displayRoomCode" class="font-mono font-bold text-cyan-400 tracking-wider text-sm">------</span>
+            <button onclick="copyRoomCode()" class="text-slate-400 hover:text-slate-200 p-1" title="Kodni nusxalash">
+              <i class="fa-regular fa-copy"></i>
+            </button>
+          </div>
+          <div class="flex items-center space-x-1 text-[11px] text-emerald-400 font-medium">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span id="onlineCountText">Ulanmoqda...</span>
+          </div>
+        </div>
+
+        <!-- MESSAGES CONTAINER -->
+        <div id="messagesContainer" class="flex-1 p-4 overflow-y-auto space-y-3 custom-scroll">
+          <!-- Dynamic Message Bubbles appended here -->
+        </div>
+
+        <!-- TELEGRAM CIRCULAR VIDEO RECORDING PREVIEW OVERLAY -->
+        <div id="videoNoteOverlay" class="hidden absolute bottom-20 right-4 z-40 bg-slate-900/90 p-4 rounded-3xl border border-cyan-500/40 flex flex-col items-center space-y-3 shadow-2xl backdrop-blur-md">
+          <span class="text-xs font-bold text-cyan-400">Yumaloq Videoxabar</span>
+          <div class="video-note-container">
+            <video id="webcamPreview" autoplay muted playsinline class="video-note-preview"></video>
+          </div>
+          <div class="flex items-center space-x-3">
+            <button onclick="cancelVideoNoteRecording()" class="w-10 h-10 rounded-full bg-rose-500/20 text-rose-400 border border-rose-500/30 flex items-center justify-center">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+            <button onclick="stopAndSendVideoNote()" class="w-12 h-12 rounded-full bg-cyan-500 text-slate-950 flex items-center justify-center text-lg font-bold shadow-lg shadow-cyan-500/40 animate-pulse">
+              <i class="fa-solid fa-paper-plane"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- INPUT CONTROL BAR (TELEGRAM + INSTAGRAM STYLE) -->
+        <div class="p-3 bg-slate-900/95 border-t border-slate-800 relative">
+          
+          <!-- Audio Recording Status Bar -->
+          <div id="audioRecordBar" class="hidden flex items-center justify-between px-4 py-2 bg-rose-500/10 border border-rose-500/30 rounded-2xl mb-2 text-xs">
+            <div class="flex items-center space-x-2 text-rose-400 font-semibold">
+              <span class="w-3 h-3 rounded-full bg-rose-500 recording-pulse"></span>
+              <span>Ovoz yozib olinmoqda...</span>
+              <span id="audioTimer" class="font-mono ml-2">00:00</span>
+            </div>
+            <div class="flex items-center space-x-2">
+              <button type="button" onclick="cancelAudioRecording()" class="text-slate-400 hover:text-rose-400 text-xs px-2 py-1">Bekor qilish</button>
+              <button type="button" onclick="stopAndSendAudio()" class="px-3 py-1 bg-rose-500 text-white rounded-xl font-bold text-xs">Yuborish</button>
+            </div>
+          </div>
+
+          <form id="chatForm" onsubmit="handleTextSubmit(event)" class="flex items-center space-x-2">
+            
+            <!-- Telegram Round Video Note Trigger Button -->
+            <button type="button" onclick="toggleVideoNoteRecording()" class="w-11 h-11 rounded-2xl bg-slate-800 hover:bg-slate-700 text-cyan-400 border border-slate-700/60 flex items-center justify-center shrink-0 transition-all active:scale-95" title="Yumaloq videoxabar (Kruglograma)">
+              <i class="fa-solid fa-circle-dot text-lg"></i>
+            </button>
+
+            <!-- Text Field -->
+            <input type="text" id="msgTextInput" placeholder="Xabarni yozing..." autocomplete="off"
+              class="flex-1 bg-slate-950/80 border border-slate-700/80 rounded-2xl py-3 px-4 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-cyan-500 transition-all">
+
+            <!-- Audio Recording Trigger Button -->
+            <button type="button" id="btnAudioRec" onclick="toggleAudioRecording()" class="w-11 h-11 rounded-2xl bg-slate-800 hover:bg-slate-700 text-pink-400 border border-slate-700/60 flex items-center justify-center shrink-0 transition-all active:scale-95" title="Ovozli xabar">
+              <i class="fa-solid fa-microphone text-lg"></i>
+            </button>
+
+            <!-- Send Text Button -->
+            <button type="submit" class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-bold flex items-center justify-center shrink-0 shadow-lg shadow-cyan-500/20 active:scale-95 transition-all">
+              <i class="fa-solid fa-paper-plane text-base"></i>
+            </button>
+          </form>
+        </div>
+
+      </section>
+
+      <!-- ================= 3. SECRET ADMIN PANEL SCREEN ================= -->
+      <section id="screenAdmin" class="hidden w-full h-full flex flex-col p-4 md:p-6 overflow-hidden bg-slate-950/90">
+        <div class="flex items-center justify-between pb-4 border-b border-slate-800">
+          <div>
+            <h2 class="text-xl font-extrabold text-rose-400 flex items-center space-x-2">
+              <i class="fa-solid fa-user-shield"></i>
+              <span>ADMIN PANEL (Boshqaruv va Xavfsizlik)</span>
+            </h2>
+            <p class="text-xs text-slate-400 mt-0.5">Xonalar, kontent xavfsizligi va parolsiz kirib nazorat qilish bo'limi</p>
+          </div>
+          <button onclick="closeAdminPanel()" class="px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold">
+            Chiqish
+          </button>
+        </div>
+
+        <!-- Admin Stats Bar -->
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 my-4">
+          <div class="p-3.5 rounded-2xl glass-tg border border-cyan-500/20">
+            <span class="text-[10px] text-slate-400 uppercase tracking-wider block font-bold">Jami Xonalar</span>
+            <span id="statTotalRooms" class="text-xl font-extrabold text-cyan-400">0</span>
+          </div>
+          <div class="p-3.5 rounded-2xl glass-tg border border-pink-500/20">
+            <span class="text-[10px] text-slate-400 uppercase tracking-wider block font-bold">Monitor Xonalar</span>
+            <span id="statActiveRooms" class="text-xl font-extrabold text-pink-400">0</span>
+          </div>
+          <div class="col-span-2 sm:col-span-1 p-3.5 rounded-2xl glass-tg border border-amber-500/20">
+            <span class="text-[10px] text-slate-400 uppercase tracking-wider block font-bold">Xavfsizlik Rejimi</span>
+            <span class="text-xs font-bold text-amber-400 flex items-center space-x-1 mt-1">
+              <i class="fa-solid fa-shield-halved"></i>
+              <span>18+ Nazorati Faol</span>
+            </span>
+          </div>
+        </div>
+
+        <!-- Room Monitoring List -->
+        <div class="flex-1 overflow-y-auto space-y-3 custom-scroll pr-1">
+          <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Mavjud Chatlar Ro'yxati</h3>
+          <div id="adminRoomsList" class="space-y-2.5">
+            <!-- Dynamic Admin Rooms list -->
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ================= MODALS ================= -->
+
+  <!-- MODAL: CREATE ROOM -->
+  <div id="modalCreate" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm hidden">
+    <div class="w-full max-w-sm glass-tg rounded-3xl p-6 space-y-4 border border-slate-700/60 animate-in fade-in zoom-in duration-150">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <h3 class="font-bold text-base text-slate-100 flex items-center space-x-2">
+          <i class="fa-solid fa-plus-circle text-cyan-400"></i>
+          <span>Yangi Chat Yaratish</span>
+        </h3>
+        <button onclick="closeModal('modalCreate')" class="text-slate-400 hover:text-white p-1">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+      
+      <div class="space-y-3">
+        <div>
+          <label class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Xona Kodi (Avto / O'zingiz)</label>
+          <div class="relative">
+            <input type="text" id="createRoomCode" placeholder="Masalan: CHAT77" maxlength="12"
+              class="w-full bg-slate-900/90 border border-slate-700/80 rounded-2xl py-3 pl-4 pr-16 text-sm text-slate-100 font-mono font-bold uppercase tracking-wider focus:outline-none focus:border-cyan-500">
+            <button type="button" onclick="generateCode()" class="absolute right-2 top-2 px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-cyan-400 rounded-xl text-xs font-bold">
+              Auto
+            </button>
+          </div>
+        </div>
+
+        <div>
+          <label class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Xona Paroli</label>
+          <input type="password" id="createRoomPass" placeholder="Maxfiy parol" maxlength="20"
+            class="w-full bg-slate-900/90 border border-slate-700/80 rounded-2xl py-3 px-4 text-sm text-slate-100 focus:outline-none focus:border-cyan-500">
+        </div>
+      </div>
+
+      <button onclick="submitCreateRoom()" class="w-full py-3.5 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-extrabold rounded-2xl shadow-lg shadow-cyan-500/20 active:scale-95 transition-all text-sm">
+        Yaratish va Kirish
+      </button>
+    </div>
+  </div>
+
+  <!-- MODAL: JOIN ROOM -->
+  <div id="modalJoin" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm hidden">
+    <div class="w-full max-w-sm glass-tg rounded-3xl p-6 space-y-4 border border-slate-700/60 animate-in fade-in zoom-in duration-150">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <h3 class="font-bold text-base text-slate-100 flex items-center space-x-2">
+          <i class="fa-solid fa-right-to-bracket text-amber-400"></i>
+          <span>Chatga Kirish</span>
+        </h3>
+        <button onclick="closeModal('modalJoin')" class="text-slate-400 hover:text-white p-1">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+      
+      <div class="space-y-3">
+        <div>
+          <label class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Xona Kodi</label>
+          <input type="text" id="joinRoomCode" placeholder="Kodni kiriting" maxlength="12"
+            class="w-full bg-slate-900/90 border border-slate-700/80 rounded-2xl py-3 px-4 text-sm text-slate-100 font-mono font-bold uppercase tracking-wider focus:outline-none focus:border-amber-400">
+        </div>
+
+        <div>
+          <label class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Xona Paroli</label>
+          <input type="password" id="joinRoomPass" placeholder="Parolni kiriting" maxlength="20"
+            class="w-full bg-slate-900/90 border border-slate-700/80 rounded-2xl py-3 px-4 text-sm text-slate-100 focus:outline-none focus:border-amber-400">
+        </div>
+      </div>
+
+      <button onclick="submitJoinRoom()" class="w-full py-3.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold rounded-2xl shadow-lg shadow-amber-500/20 active:scale-95 transition-all text-sm">
+        Xonaga Ulanish
+      </button>
+    </div>
+  </div>
+
+  <!-- MODAL: LIVE CALL SIMULATOR (WEBRTC SIGNALING UI) -->
+  <div id="modalCall" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-md hidden">
+    <div class="w-full max-w-sm glass-tg rounded-3xl p-6 text-center space-y-5 border border-cyan-500/30">
+      <div class="relative inline-block">
+        <div id="callAvatarPulse" class="w-24 h-24 rounded-full bg-gradient-to-tr from-cyan-500 to-pink-500 flex items-center justify-center text-3xl font-extrabold text-white animate-pulse">
+          <i class="fa-solid fa-user"></i>
+        </div>
+      </div>
+      
+      <div>
+        <h3 id="callPeerName" class="text-lg font-bold text-slate-100">Jonli Aloqa</h3>
+        <p id="callStatusText" class="text-xs text-cyan-400 mt-1">Chaqirilmoqda...</p>
+      </div>
+
+      <!-- Video Feed Grid (If Video Call) -->
+      <div id="callVideoContainer" class="hidden relative w-full h-48 rounded-2xl overflow-hidden bg-slate-950 border border-slate-800">
+        <video id="remoteVideo" autoplay playsinline class="w-full h-full object-cover"></video>
+        <video id="localVideo" autoplay muted playsinline class="absolute bottom-2 right-2 w-20 h-20 rounded-xl object-cover border border-cyan-400"></video>
+      </div>
+
+      <div class="flex items-center justify-center space-x-4 pt-2">
+        <button onclick="endCall()" class="w-14 h-14 rounded-full bg-rose-500 text-white flex items-center justify-center text-xl shadow-lg shadow-rose-500/40 active:scale-95 transition-all">
+          <i class="fa-solid fa-phone-slash"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FIREBASE MODULE & APPLICATION LOGIC -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { getFirestore, doc, getDoc, setDoc, deleteDoc, collection, addDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+    // Standard Environment App ID & User Provided Firebase Keys
+    const appId = typeof __app_id !== 'undefined' ? __app_id : 'sohbat-ultra-app';
+    const firebaseConfig = typeof __firebase_config !== 'undefined' 
+      ? JSON.parse(__firebase_config) 
+      : {
+          apiKey: "AIzaSyB4SqJS0ztxdUxRwOYx2NB5XiZTs-vsR6o",
+          authDomain: "chatchi-e8290.firebaseapp.com",
+          projectId: "chatchi-e8290",
+          storageBucket: "chatchi-e8290.firebasestorage.app",
+          messagingSenderId: "760473672419",
+          appId: "1:760473672419:web:15dc850a3b97f1b79c03d6",
+          measurementId: "G-5JZ9325HWW"
+        };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    // Global State Variables
+    let currentUser = null;
+    let currentUserName = '';
+    let currentRoomCode = null;
+    let isAdminMode = false;
+
+    let activeMessagesUnsub = null;
+    let activeRoomsAdminUnsub = null;
+
+    // Recording State Variables
+    let mediaRecorder = null;
+    let audioChunks = [];
+    let audioTimerInterval = null;
+    let audioSeconds = 0;
+
+    let videoStream = null;
+    let videoMediaRecorder = null;
+    let videoChunks = [];
+
+    // WebRTC / Call Simulation State
+    let localStream = null;
+
+    // Secret Admin Code
+    const SECRET_ADMIN_PASS = "112233445566778899001234567890";
+
+    // --- Firebase Auth Init ---
+    async function initAuth() {
+      try {
+        if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+          await signInWithCustomToken(auth, __initial_auth_token);
+        } else {
+          await signInAnonymously(auth);
+        }
+      } catch (err) {
+        console.error("Auth error:", err);
+        try { await signInAnonymously(auth); } catch(e){}
+      }
+    }
+
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        currentUser = user;
+      }
+    });
+
+    initAuth();
+
+    // --- Toast Notification ---
+    window.showToast = function(msg, isError = false) {
+      const toast = document.getElementById('toast');
+      const msgEl = document.getElementById('toastMsg');
+      const iconEl = document.getElementById('toastIcon');
+
+      msgEl.innerText = msg;
+      iconEl.className = isError ? "fa-solid fa-circle-exclamation text-rose-400" : "fa-solid fa-circle-check text-cyan-400";
+      
+      toast.classList.remove('-translate-y-20');
+      toast.classList.add('translate-y-0');
+
+      setTimeout(() => {
+        toast.classList.remove('translate-y-0');
+        toast.classList.add('-translate-y-20');
+      }, 3200);
+    };
+
+    // --- UI Modals Handler ---
+    window.openModal = function(id) {
+      const user = document.getElementById('inputUsername').value.trim();
+      if (!user) {
+        window.showToast("Iltimos, avval ismingizni kiriting!", true);
+        document.getElementById('inputUsername').focus();
+        return;
+      }
+      currentUserName = user;
+      if (id === 'modalCreate') generateCode();
+      document.getElementById(id).classList.remove('hidden');
+    };
+
+    window.closeModal = function(id) {
+      document.getElementById(id).classList.add('hidden');
+    };
+
+    window.generateCode = function() {
+      const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+      let res = '';
+      for (let i = 0; i < 6; i++) res += chars.charAt(Math.floor(Math.random() * chars.length));
+      document.getElementById('createRoomCode').value = res;
+    };
+
+    // --- Create Room ---
+    window.submitCreateRoom = async function() {
+      const code = document.getElementById('createRoomCode').value.trim().toUpperCase();
+      const pass = document.getElementById('createRoomPass').value.trim();
+
+      if (!code || code.length < 3) {
+        window.showToast("Xona kodini to'g'ri kiriting!", true);
+        return;
+      }
+      if (!pass) {
+        window.showToast("Xona parolini kiriting!", true);
+        return;
+      }
+      if (!currentUser) return;
 
       try {
-        await addDoc(collection(db, "rooms", currentRoomId, "messages"), {
+        const roomRef = doc(db, 'artifacts', appId, 'public', 'data', 'rooms', code);
+        const snap = await getDoc(roomRef);
+
+        if (snap.exists()) {
+          window.showToast("Bu kodli xona allaqachon mavjud!", true);
+          return;
+        }
+
+        await setDoc(roomRef, {
+          code: code,
+          password: pass,
+          createdBy: currentUser.uid,
+          createdByName: currentUserName,
+          createdAt: serverTimestamp()
+        });
+
+        closeModal('modalCreate');
+        enterRoom(code);
+        window.showToast("Chat xonasi yaratildi!");
+      } catch (err) {
+        console.error("Create room error:", err);
+        window.showToast("Xona yaratishda xatolik!", true);
+      }
+    };
+
+    // --- Join Room ---
+    window.submitJoinRoom = async function() {
+      const code = document.getElementById('joinRoomCode').value.trim().toUpperCase();
+      const pass = document.getElementById('joinRoomPass').value.trim();
+
+      if (!code || !pass) {
+        window.showToast("Kodni va parolni to'liq kiriting!", true);
+        return;
+      }
+      if (!currentUser) return;
+
+      try {
+        const roomRef = doc(db, 'artifacts', appId, 'public', 'data', 'rooms', code);
+        const snap = await getDoc(roomRef);
+
+        if (!snap.exists()) {
+          window.showToast("Bunday xona topilmadi!", true);
+          return;
+        }
+
+        if (snap.data().password !== pass && !isAdminMode) {
+          window.showToast("Xona paroli noto'g'ri!", true);
+          return;
+        }
+
+        closeModal('modalJoin');
+        enterRoom(code);
+        window.showToast("Xonaga muvaffaqiyatli kirdingiz!");
+      } catch (err) {
+        console.error("Join room error:", err);
+        window.showToast("Xonaga kirishda xatolik!", true);
+      }
+    };
+
+    // --- Enter Chat Room ---
+    function enterRoom(code) {
+      currentRoomId = code;
+      currentRoomCode = code;
+
+      document.getElementById('screenAuth').classList.add('hidden');
+      document.getElementById('screenAdmin').classList.add('hidden');
+      document.getElementById('screenChat').classList.remove('hidden');
+      document.getElementById('leaveChatBtn').classList.remove('hidden');
+      document.getElementById('callControlGroup').classList.remove('hidden');
+
+      document.getElementById('displayRoomCode').innerText = code;
+      document.getElementById('headerStatus').innerText = `Xona: #${code}`;
+
+      // Realtime Messages Listener
+      const messagesRef = collection(db, 'artifacts', appId, 'public', 'data', 'rooms', code, 'messages');
+
+      if (activeMessagesUnsub) activeMessagesUnsub();
+
+      activeMessagesUnsub = onSnapshot(messagesRef, (snapshot) => {
+        const messages = [];
+        snapshot.forEach(docSnap => messages.push({ id: docSnap.id, ...docSnap.data() }));
+
+        // JS memory sort Rule 2
+        messages.sort((a, b) => (a.timeMillis || 0) - (b.timeMillis || 0));
+        renderMessages(messages);
+      }, (err) => console.error("Snapshot error:", err));
+    }
+
+    // --- Render Chat Messages ---
+    function renderMessages(messages) {
+      const container = document.getElementById('messagesContainer');
+      container.innerHTML = '';
+
+      const usersSet = new Set(messages.map(m => m.senderName));
+      document.getElementById('onlineCountText').innerText = `${usersSet.size || 1} ta sohbatdosh`;
+
+      messages.forEach(msg => {
+        const isMe = msg.senderId === currentUser?.uid;
+        const wrapper = document.createElement('div');
+        wrapper.className = `flex flex-col ${isMe ? 'items-end' : 'items-start'} my-1.5`;
+
+        const timeStr = msg.createdAt?.toDate 
+          ? msg.createdAt.toDate().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+          : new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+        let contentHtml = '';
+
+        if (msg.type === 'audio') {
+          contentHtml = `
+            <div class="flex items-center space-x-2 my-1">
+              <i class="fa-solid fa-microphone text-pink-400 text-base"></i>
+              <audio controls src="${msg.mediaUrl}" class="max-w-[200px] h-9"></audio>
+            </div>
+          `;
+        } else if (msg.type === 'videoNote') {
+          contentHtml = `
+            <div class="video-note-container my-1">
+              <video src="${msg.mediaUrl}" controls autoplay loop muted playsinline class="w-full h-full object-cover rounded-full"></video>
+            </div>
+          `;
+        } else {
+          contentHtml = `<p class="leading-relaxed break-words">${escapeHtml(msg.text)}</p>`;
+        }
+
+        wrapper.innerHTML = `
+          <div class="flex items-center space-x-1.5 mb-0.5 px-1">
+            <span class="text-[10px] font-bold ${isMe ? 'text-cyan-400' : 'text-pink-400'}">${escapeHtml(msg.senderName)}</span>
+            <span class="text-[9px] text-slate-500">${timeStr}</span>
+          </div>
+          <div class="max-w-[85%] sm:max-w-[75%] px-4 py-2.5 rounded-2xl text-xs sm:text-sm ${
+            isMe 
+              ? 'bg-gradient-to-r from-cyan-600 to-blue-600 text-slate-950 font-medium rounded-tr-none shadow-md'
+              : 'bg-slate-800 border border-slate-700/80 text-slate-100 rounded-tl-none'
+          }">
+            ${contentHtml}
+          </div>
+        `;
+
+        container.appendChild(wrapper);
+      });
+
+      container.scrollTop = container.scrollHeight;
+    }
+
+    // --- Send Text Message ---
+    window.handleTextSubmit = async function(e) {
+      e.preventDefault();
+      const input = document.getElementById('msgTextInput');
+      const text = input.value.trim();
+
+      if (!text || !currentRoomCode || !currentUser) return;
+      input.value = '';
+
+      try {
+        const messagesRef = collection(db, 'artifacts', appId, 'public', 'data', 'rooms', currentRoomCode, 'messages');
+        await addDoc(messagesRef, {
+          type: 'text',
           text: text,
-          sender: currentUser,
+          senderId: currentUser.uid,
+          senderName: currentUserName,
+          timeMillis: Date.now(),
           createdAt: serverTimestamp()
         });
       } catch (err) {
-        window.showAlert("Xabar yuborilmadi: " + err.message);
+        console.error("Send text error:", err);
       }
     };
 
-    // CHATDAN CHIQISH
-    window.leaveChat = () => {
-      if (unsubscribeListener) unsubscribeListener();
-      currentRoomId = "";
-      document.getElementById('chatScreen').classList.add('hidden');
-      document.getElementById('leaveBtn').classList.add('hidden');
-      document.getElementById('roomInfoText').innerText = "Bosh sahifa";
-      document.getElementById('authScreen').classList.remove('hidden');
+    // --- Voice Message Recording (Audio) ---
+    window.toggleAudioRecording = async function() {
+      if (mediaRecorder && mediaRecorder.state === 'recording') {
+        stopAndSendAudio();
+        return;
+      }
+
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        mediaRecorder = new MediaRecorder(stream);
+        audioChunks = [];
+
+        mediaRecorder.ondataavailable = (e) => audioChunks.push(e.data);
+        mediaRecorder.start();
+
+        document.getElementById('audioRecordBar').classList.remove('hidden');
+        audioSeconds = 0;
+        audioTimerInterval = setInterval(() => {
+          audioSeconds++;
+          const mins = String(Math.floor(audioSeconds / 60)).padStart(2, '0');
+          const secs = String(audioSeconds % 60).padStart(2, '0');
+          document.getElementById('audioTimer').innerText = `${mins}:${secs}`;
+        }, 1000);
+
+      } catch (err) {
+        window.showToast("Mikrofondan foydalanishga ruxsat berilmadi!", true);
+      }
     };
 
-    // XONANI NUSXALASH
-    window.copyRoomId = () => {
-      navigator.clipboard.writeText(currentRoomId);
-      window.showAlert("Xona kodi nusxalandi!", "success");
+    window.cancelAudioRecording = function() {
+      if (mediaRecorder && mediaRecorder.state === 'recording') {
+        mediaRecorder.stop();
+        mediaRecorder.stream.getTracks().forEach(track => track.stop());
+      }
+      clearInterval(audioTimerInterval);
+      document.getElementById('audioRecordBar').classList.add('hidden');
     };
 
-    function escapeHtml(text) {
-      return text
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
+    window.stopAndSendAudio = function() {
+      if (!mediaRecorder || mediaRecorder.state !== 'recording') return;
+
+      mediaRecorder.onstop = async () => {
+        const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+        const reader = new FileReader();
+        reader.readAsDataURL(audioBlob);
+        reader.onloadend = async () => {
+          const base64Audio = reader.result;
+          try {
+            const messagesRef = collection(db, 'artifacts', appId, 'public', 'data', 'rooms', currentRoomCode, 'messages');
+            await addDoc(messagesRef, {
+              type: 'audio',
+              mediaUrl: base64Audio,
+              senderId: currentUser.uid,
+              senderName: currentUserName,
+              timeMillis: Date.now(),
+              createdAt: serverTimestamp()
+            });
+          } catch (err) {
+            console.error("Send audio error:", err);
+          }
+        };
+        mediaRecorder.stream.getTracks().forEach(track => track.stop());
+      };
+
+      mediaRecorder.stop();
+      clearInterval(audioTimerInterval);
+      document.getElementById('audioRecordBar').classList.add('hidden');
+    };
+
+    // --- Telegram Circular Video Note Recording ---
+    window.toggleVideoNoteRecording = async function() {
+      const overlay = document.getElementById('videoNoteOverlay');
+      if (!overlay.classList.contains('hidden')) {
+        cancelVideoNoteRecording();
+        return;
+      }
+
+      try {
+        videoStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+        const preview = document.getElementById('webcamPreview');
+        preview.srcObject = videoStream;
+
+        videoMediaRecorder = new MediaRecorder(videoStream);
+        videoChunks = [];
+
+        videoMediaRecorder.ondataavailable = (e) => videoChunks.push(e.data);
+        videoMediaRecorder.start();
+
+        overlay.classList.remove('hidden');
+      } catch (err) {
+        window.showToast("Kameraga ruxsat berilmadi!", true);
+      }
+    };
+
+    window.cancelVideoNoteRecording = function() {
+      if (videoMediaRecorder && videoMediaRecorder.state === 'recording') {
+        videoMediaRecorder.stop();
+      }
+      if (videoStream) {
+        videoStream.getTracks().forEach(track => track.stop());
+      }
+      document.getElementById('videoNoteOverlay').classList.add('hidden');
+    };
+
+    window.stopAndSendVideoNote = function() {
+      if (!videoMediaRecorder || videoMediaRecorder.state !== 'recording') return;
+
+      videoMediaRecorder.onstop = async () => {
+        const videoBlob = new Blob(videoChunks, { type: 'video/webm' });
+        const reader = new FileReader();
+        reader.readAsDataURL(videoBlob);
+        reader.onloadend = async () => {
+          const base64Video = reader.result;
+          try {
+            const messagesRef = collection(db, 'artifacts', appId, 'public', 'data', 'rooms', currentRoomCode, 'messages');
+            await addDoc(messagesRef, {
+              type: 'videoNote',
+              mediaUrl: base64Video,
+              senderId: currentUser.uid,
+              senderName: currentUserName,
+              timeMillis: Date.now(),
+              createdAt: serverTimestamp()
+            });
+          } catch (err) {
+            console.error("Send video note error:", err);
+          }
+        };
+        if (videoStream) videoStream.getTracks().forEach(track => track.stop());
+      };
+
+      videoMediaRecorder.stop();
+      document.getElementById('videoNoteOverlay').classList.add('hidden');
+    };
+
+    // --- Live Call Simulator (Audio/Video Interface) ---
+    window.initiateCall = async function(type) {
+      document.getElementById('modalCall').classList.remove('hidden');
+      document.getElementById('callStatusText').innerText = `${type === 'video' ? 'Video' : 'Ovozli'} chaqiruv bog'lanmoqda...`;
+
+      if (type === 'video') {
+        document.getElementById('callVideoContainer').classList.remove('hidden');
+        try {
+          localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+          document.getElementById('localVideo').srcObject = localStream;
+        } catch (e) {
+          window.showToast("Kameraga kirish imkoni bo'lmadi", true);
+        }
+      } else {
+        document.getElementById('callVideoContainer').classList.add('hidden');
+      }
+    };
+
+    window.endCall = function() {
+      if (localStream) {
+        localStream.getTracks().forEach(track => track.stop());
+        localStream = null;
+      }
+      document.getElementById('modalCall').classList.add('hidden');
+    };
+
+    // --- Secret Admin Panel Trigger & Logic ---
+    let logoClickCount = 0;
+    document.getElementById('appLogoBtn').addEventListener('click', () => {
+      logoClickCount++;
+      if (logoClickCount >= 5) {
+        logoClickCount = 0;
+        promptAdminAuth();
+      }
+    });
+
+    window.promptAdminAuth = function() {
+      const code = prompt("Admin Panelga kirish uchun maxfiy parolni kiriting:");
+      if (code === SECRET_ADMIN_PASS) {
+        isAdminMode = true;
+        document.getElementById('adminBadge').classList.remove('hidden');
+        openAdminPanel();
+        window.showToast("Admin rejim faollashdi!");
+      } else if (code) {
+        window.showToast("Parol noto'g'ri!", true);
+      }
+    };
+
+    function openAdminPanel() {
+      document.getElementById('screenAuth').classList.add('hidden');
+      document.getElementById('screenChat').classList.add('hidden');
+      document.getElementById('screenAdmin').classList.remove('hidden');
+
+      // Listen to all active rooms for security monitoring
+      const roomsRef = collection(db, 'artifacts', appId, 'public', 'data', 'rooms');
+
+      if (activeRoomsAdminUnsub) activeRoomsAdminUnsub();
+
+      activeRoomsAdminUnsub = onSnapshot(roomsRef, (snapshot) => {
+        const rooms = [];
+        snapshot.forEach(docSnap => rooms.push({ id: docSnap.id, ...docSnap.data() }));
+
+        document.getElementById('statTotalRooms').innerText = rooms.length;
+        document.getElementById('statActiveRooms').innerText = rooms.length;
+
+        renderAdminRooms(rooms);
+      });
+    }
+
+    function renderAdminRooms(rooms) {
+      const listContainer = document.getElementById('adminRoomsList');
+      listContainer.innerHTML = '';
+
+      if (rooms.length === 0) {
+        listContainer.innerHTML = '<p class="text-xs text-slate-500 py-4 text-center">Hozirda faol chat xonalari mavjud emas.</p>';
+        return;
+      }
+
+      rooms.forEach(room => {
+        const card = document.createElement('div');
+        card.className = "p-4 glass-tg rounded-2xl border border-slate-800 flex items-center justify-between";
+
+        card.innerHTML = `
+          <div>
+            <div class="flex items-center space-x-2">
+              <span class="font-mono font-bold text-cyan-400 text-sm">#${room.code}</span>
+              <span class="text-xs text-slate-400">Parol: <strong class="text-amber-400 font-mono">${escapeHtml(room.password)}</strong></span>
+            </div>
+            <p class="text-[11px] text-slate-500 mt-1">Yaratuvchi: ${escapeHtml(room.createdByName || 'Noma\'lum')}</p>
+          </div>
+          <div class="flex items-center space-x-2">
+            <button onclick="adminBypassJoin('${room.code}')" class="px-3 py-1.5 bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 rounded-xl text-xs font-semibold">
+              <i class="fa-solid fa-eye mr-1"></i> Kuzatish
+            </button>
+            <button onclick="adminDeleteRoom('${room.code}')" class="px-3 py-1.5 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 rounded-xl text-xs font-semibold">
+              <i class="fa-solid fa-trash mr-1"></i> O'chirish
+            </button>
+          </div>
+        `;
+        listContainer.appendChild(card);
+      });
+    }
+
+    window.adminBypassJoin = function(roomCode) {
+      currentUserName = "ADMIN_INSPECTOR";
+      enterRoom(roomCode);
+      window.showToast(`Xona #${roomCode} admin sifatida kuzatilmoqda`);
+    };
+
+    window.adminDeleteRoom = async function(roomCode) {
+      if (!confirm(`Haqiqatan ham #${roomCode} xonasini o'chirmoqchimisiz?`)) return;
+      try {
+        const roomRef = doc(db, 'artifacts', appId, 'public', 'data', 'rooms', roomCode);
+        await deleteDoc(roomRef);
+        window.showToast(`Xona #${roomCode} o'chirib tashlandi`);
+      } catch (err) {
+        console.error("Delete room error:", err);
+      }
+    };
+
+    window.closeAdminPanel = function() {
+      document.getElementById('screenAdmin').classList.add('hidden');
+      document.getElementById('screenAuth').classList.remove('hidden');
+    };
+
+    // --- Leave Chat ---
+    window.leaveChatRoom = function() {
+      if (activeMessagesUnsub) activeMessagesUnsub();
+      currentRoomCode = null;
+
+      document.getElementById('screenChat').classList.add('hidden');
+      document.getElementById('leaveChatBtn').classList.add('hidden');
+      document.getElementById('callControlGroup').classList.add('hidden');
+      document.getElementById('headerStatus').innerText = "Bosh Sahifa";
+      document.getElementById('screenAuth').classList.remove('hidden');
+
+      window.showToast("Chatdan chiqdingiz");
+    };
+
+    // --- Copy Room Code ---
+    window.copyRoomCode = function() {
+      if (!currentRoomCode) return;
+      const input = document.createElement('input');
+      input.value = currentRoomCode;
+      document.body.appendChild(input);
+      input.select();
+      document.execCommand('copy');
+      document.body.removeChild(input);
+      window.showToast("Xona kodi nusxalandi!");
+    };
+
+    function escapeHtml(str) {
+      return (str || '').replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
     }
   </script>
 </body>
