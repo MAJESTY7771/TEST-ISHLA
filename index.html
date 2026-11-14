@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Sohbat Ultra | Telegram & Instagram Style</title>
+  <title>Sohbat Ultra | Live Mikrofon & Kamera</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
   <style>
@@ -16,14 +16,6 @@
       background: rgba(30, 41, 59, 0.8);
       backdrop-filter: blur(20px);
       border: 1px solid rgba(255, 255, 255, 0.08);
-    }
-    .circle-video {
-      width: 190px;
-      height: 190px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 3px solid #06b6d4;
-      box-shadow: 0 10px 25px rgba(6, 182, 212, 0.3);
     }
     .chat-scroll::-webkit-scrollbar {
       width: 4px;
@@ -52,9 +44,16 @@
       </div>
       
       <div class="flex items-center space-x-2">
+        <!-- Live Mikrofon va Live Kamera Tugmalari (Qo'ng'iroq o'rniga) -->
         <div id="callButtons" class="hidden flex items-center space-x-1">
-          <button onclick="startCall('audio')" class="p-2 text-slate-300 hover:text-cyan-400 rounded-xl hover:bg-slate-800 transition" title="Ovozli qo'ng'iroq"><i class="fa-solid fa-phone text-sm"></i></button>
-          <button onclick="startCall('video')" class="p-2 text-slate-300 hover:text-cyan-400 rounded-xl hover:bg-slate-800 transition" title="Video qo'ng'iroq"><i class="fa-solid fa-video text-sm"></i></button>
+          <button onclick="startLiveStream('audio')" class="p-2 text-slate-300 hover:text-cyan-400 rounded-xl hover:bg-slate-800 transition flex items-center space-x-1" title="Live Mikrofon">
+            <i class="fa-solid fa-microphone text-sm text-cyan-400"></i>
+            <span class="text-[10px] font-medium hidden sm:inline">Live Mikrofon</span>
+          </button>
+          <button onclick="startLiveStream('video')" class="p-2 text-slate-300 hover:text-cyan-400 rounded-xl hover:bg-slate-800 transition flex items-center space-x-1" title="Live Kamera">
+            <i class="fa-solid fa-video text-sm text-cyan-400"></i>
+            <span class="text-[10px] font-medium hidden sm:inline">Live Kamera</span>
+          </button>
         </div>
 
         <button onclick="navigateTo('adminAuth')" class="p-2 text-amber-400 hover:text-amber-300 bg-amber-500/10 hover:bg-amber-500/20 rounded-xl border border-amber-500/20 transition" title="Admin Panel">
@@ -173,52 +172,24 @@
 
       <div id="chatMessages" class="flex-1 overflow-y-auto space-y-3 pr-1 chat-scroll my-2 flex flex-col"></div>
 
-      <!-- TELEGRAM USLUBIDAGI YOZISH PANELI (BEKOR QILISH VA YUBORISH BILAN) -->
-      <div id="recordingBar" class="hidden bg-slate-900 border border-cyan-500/40 rounded-2xl p-3 mb-2 flex items-center justify-between shadow-lg">
-        <div class="flex items-center space-x-3 text-xs text-cyan-400">
-          <div class="w-3 h-3 rounded-full bg-red-500 animate-ping"></div>
-          <span id="recordingStatusText" class="font-medium text-slate-200">Yozilmoqda...</span>
-        </div>
-        <div class="flex items-center space-x-2">
-          <!-- Bekor qilish (Savatga tashlash) tugmasi - Xatolik tuzatildi -->
-          <button type="button" onclick="cancelRecording()" class="px-3 py-1.5 bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30 rounded-xl text-xs font-medium flex items-center space-x-1 transition">
-            <i class="fa-solid fa-trash"></i>
-            <span>Bekor qilish</span>
-          </button>
-          <!-- Tasdiqlab yuborish tugmasi -->
-          <button type="button" onclick="finishRecording()" class="px-3 py-1.5 bg-cyan-500 hover:bg-cyan-400 text-slate-950 rounded-xl text-xs font-bold flex items-center space-x-1 shadow-md shadow-cyan-500/20 transition">
-            <i class="fa-solid fa-check"></i>
-            <span>Yuborish</span>
-          </button>
-        </div>
-      </div>
-
-      <!-- INPUT BAR -->
-      <form onsubmit="sendTextMessage(event)" class="flex items-center space-x-1.5">
+      <!-- ODDIY XABAR YOZISH BAR -->
+      <form onsubmit="sendTextMessage(event)" class="flex items-center space-x-1.5 mt-2">
         <input type="text" id="inputMsg" placeholder="Xabar yozing..." autocomplete="off" class="flex-1 bg-slate-900 border border-slate-700/80 rounded-2xl py-3 px-3.5 text-xs text-slate-100 focus:outline-none focus:border-cyan-500">
         
-        <button type="button" onclick="toggleAudioRecord()" class="w-10 h-10 bg-slate-800 text-slate-300 hover:text-cyan-400 rounded-2xl flex items-center justify-center border border-slate-700 transition" title="Ovozli xabar yozish">
-          <i class="fa-solid fa-microphone text-xs"></i>
-        </button>
-
-        <button type="button" onclick="toggleVideoRecord()" class="w-10 h-10 bg-slate-800 text-slate-300 hover:text-cyan-400 rounded-2xl flex items-center justify-center border border-slate-700 transition" title="Yumaloq video yozish">
-          <i class="fa-solid fa-video text-xs"></i>
-        </button>
-
-        <button type="submit" class="w-10 h-10 bg-cyan-500 hover:bg-cyan-400 text-slate-950 rounded-2xl flex items-center justify-center font-bold shadow-lg shadow-cyan-500/20 shrink-0 transition">
+        <button type="submit" class="w-11 h-11 bg-cyan-500 hover:bg-cyan-400 text-slate-950 rounded-2xl flex items-center justify-center font-bold shadow-lg shadow-cyan-500/20 shrink-0 transition">
           <i class="fa-solid fa-paper-plane text-xs"></i>
         </button>
       </form>
     </div>
 
-    <!-- WEBRTC JONLI QO'NG'IROQ OVERLAY (OVOZ VA VIDEO TO'LIQ ISHLAYDI) -->
+    <!-- LIVE MIKROFON VA KAMERA OYNASI (OVERLAY) -->
     <div id="callOverlay" class="hidden absolute inset-0 bg-slate-950/95 z-50 flex flex-col items-center justify-between p-6">
       <div class="text-center mt-6">
         <div class="w-20 h-20 rounded-full bg-cyan-500/10 border-2 border-cyan-500 flex items-center justify-center mx-auto mb-3 animate-pulse">
-          <i class="fa-solid fa-user text-2xl text-cyan-400"></i>
+          <i class="fa-solid fa-tower-broadcast text-2xl text-cyan-400"></i>
         </div>
-        <h4 id="callPeerName" class="font-bold text-base text-slate-100">Suhbatdosh</h4>
-        <p id="callStatus" class="text-xs text-slate-400 mt-1">Qo'ng'iroq qilinmoqda...</p>
+        <h4 id="callPeerName" class="font-bold text-base text-slate-100">Live Ulanish</h4>
+        <p id="callStatus" class="text-xs text-slate-400 mt-1">Live oqim kutilmoqda...</p>
       </div>
 
       <div id="videoContainer" class="hidden relative w-full flex-1 max-h-[350px] my-4 rounded-2xl overflow-hidden bg-slate-900 border border-slate-800">
@@ -227,10 +198,10 @@
       </div>
 
       <div class="flex items-center space-x-6 mb-6">
-        <button id="acceptCallBtn" onclick="acceptIncomingCall()" class="hidden w-14 h-14 bg-emerald-600 hover:bg-emerald-500 text-white rounded-full flex items-center justify-center shadow-lg shadow-emerald-600/30 transition">
-          <i class="fa-solid fa-phone text-xl"></i>
+        <button id="acceptCallBtn" onclick="acceptIncomingStream()" class="hidden w-14 h-14 bg-emerald-600 hover:bg-emerald-500 text-white rounded-full flex items-center justify-center shadow-lg shadow-emerald-600/30 transition" title="Live Qabul qilish">
+          <i class="fa-solid fa-check text-xl"></i>
         </button>
-        <button onclick="endCall()" class="w-14 h-14 bg-red-600 hover:bg-red-500 text-white rounded-full flex items-center justify-center shadow-lg shadow-red-600/30 transition">
+        <button onclick="endLiveStream()" class="w-14 h-14 bg-red-600 hover:bg-red-500 text-white rounded-full flex items-center justify-center shadow-lg shadow-red-600/30 transition" title="Live Tugatish">
           <i class="fa-solid fa-phone-slash text-xl"></i>
         </button>
       </div>
@@ -264,16 +235,10 @@
     let callSignalListener = null;
     const ADMIN_PIN = "112233445566778899001234567890";
 
-    let mediaRecorder = null;
-    let recordedChunks = [];
-    let isRecordingAudio = false;
-    let isRecordingVideo = false;
-    let shouldCancelRecording = false;
-
     let localStream = null;
     let remoteStream = null;
     let peerConnection = null;
-    let activeCallType = "audio";
+    let activeStreamType = "audio";
 
     const rtcConfig = {
       iceServers: [{ urls: ['stun:stun1.l.google.com:19302', 'stun:stun2.l.google.com:19302'] }]
@@ -435,7 +400,7 @@
       }
     };
 
-    // REALTIME CHAT MESSAGES & CALL SIGNALING
+    // REALTIME CHAT MESSAGES & LIVE STREAM SIGNALING
     function initChatRoom() {
       document.getElementById('roomStatusText').innerText = `Xona: #${currentRoomId}`;
       document.getElementById('displayCode').innerText = currentRoomId;
@@ -458,27 +423,11 @@
           const wrapper = document.createElement('div');
           wrapper.className = `flex flex-col ${isMe ? 'items-end' : 'items-start'} my-1`;
 
-          let msgContent = "";
-
-          if (data.type === 'text') {
-            msgContent = `
-              <div class="max-w-[80%] rounded-2xl py-2 px-3 text-xs ${
-                isMe ? 'bg-cyan-500 text-slate-950 rounded-br-none font-medium' : 'bg-slate-800 text-slate-200 rounded-bl-none border border-slate-700'
-              }">${escapeHtml(data.text || '')}</div>
-            `;
-          } else if (data.type === 'audio') {
-            msgContent = `
-              <div class="max-w-[80%] rounded-2xl p-2 ${isMe ? 'bg-cyan-500 text-slate-950 rounded-br-none' : 'bg-slate-800 text-slate-200 rounded-bl-none'}">
-                <audio controls src="${data.mediaUrl}" class="max-w-[200px] h-8"></audio>
-              </div>
-            `;
-          } else if (data.type === 'circleVideo') {
-            msgContent = `
-              <div class="relative">
-                <video src="${data.mediaUrl}" controls autoplay loop muted playsinline class="circle-video"></video>
-              </div>
-            `;
-          }
+          const msgContent = `
+            <div class="max-w-[80%] rounded-2xl py-2 px-3 text-xs ${
+              isMe ? 'bg-cyan-500 text-slate-950 rounded-br-none font-medium' : 'bg-slate-800 text-slate-200 rounded-bl-none border border-slate-700'
+            }">${escapeHtml(data.text || '')}</div>
+          `;
 
           wrapper.innerHTML = `
             <span class="text-[9px] text-slate-400 px-1 mb-0.5">${escapeHtml(data.sender || '')}</span>
@@ -490,7 +439,7 @@
         container.scrollTop = container.scrollHeight;
       });
 
-      // CALL SIGNALING LISTENER
+      // LIVE STREAM SIGNALING LISTENER
       if (callSignalListener) callSignalListener();
       callSignalListener = onSnapshot(doc(db, "rooms", currentRoomId, "calls", "active"), async (snapshot) => {
         if (snapshot.exists()) {
@@ -498,13 +447,13 @@
           if (callData.caller !== currentUser && callData.status === "ringing") {
             document.getElementById('callOverlay').classList.remove('hidden');
             document.getElementById('callPeerName').innerText = callData.caller;
-            document.getElementById('callStatus').innerText = callData.type === 'video' ? "Kiruvchi video qo'ng'iroq..." : "Kiruvchi ovozli qo'ng'iroq...";
+            document.getElementById('callStatus').innerText = callData.type === 'video' ? "Live Kamera chaqiruvi kelmoqda..." : "Live Mikrofon ulanishi kelmoqda...";
             document.getElementById('acceptCallBtn').classList.remove('hidden');
-            activeCallType = callData.type;
-          } else if (callData.status === "accepted" && peerConnection) {
-            document.getElementById('callStatus').innerText = "Aloqadasiz (Ovoz ulangan)";
+            activeStreamType = callData.type;
+          } else if (callData.status === "accepted") {
+            document.getElementById('callStatus').innerText = "Live oqim faol (Ovoz va Video ulangan)";
           } else if (callData.status === "ended") {
-            window.endCall(false);
+            window.endLiveStream(false);
           }
         }
       });
@@ -530,101 +479,12 @@
       }
     };
 
-    // RECORDING AUDIO & CIRCLE VIDEO (BEKOR QILISH VA YUBORISH MANTIQI TO'G'IRLANDI)
-    window.toggleAudioRecord = async () => {
-      if (isRecordingAudio) {
-        finishRecording();
-      } else {
-        startRecording(false);
-      }
-    };
-
-    window.toggleVideoRecord = async () => {
-      if (isRecordingVideo) {
-        finishRecording();
-      } else {
-        startRecording(true);
-      }
-    };
-
-    async function startRecording(isVideo) {
-      try {
-        const constraints = isVideo ? { audio: true, video: { width: { ideal: 240 }, height: { ideal: 240 }, frameRate: { max: 15 } } } : { audio: true };
-        const stream = await navigator.mediaDevices.getUserMedia(constraints);
-
-        recordedChunks = [];
-        shouldCancelRecording = false;
-
-        const options = isVideo ? { mimeType: 'video/webm;codecs=vp8', videoBitsPerSecond: 250000 } : { mimeType: 'audio/webm' };
-        mediaRecorder = new MediaRecorder(stream, options);
-
-        mediaRecorder.ondataavailable = (e) => {
-          if (e.data.size > 0) recordedChunks.push(e.data);
-        };
-
-        mediaRecorder.onstop = async () => {
-          stream.getTracks().forEach(track => track.stop());
-
-          // Agar bekor qilish tugmasi bosilgan bo'lsa, hech qanday xabar yuborilmaydi!
-          if (shouldCancelRecording || recordedChunks.length === 0) {
-            recordedChunks = [];
-            return;
-          }
-
-          const blob = new Blob(recordedChunks, { type: isVideo ? 'video/webm' : 'audio/webm' });
-          const reader = new FileReader();
-          reader.onloadend = async () => {
-            const base64Data = reader.result;
-            try {
-              await addDoc(collection(db, "rooms", currentRoomId, "messages"), {
-                type: isVideo ? 'circleVideo' : 'audio',
-                mediaUrl: base64Data,
-                sender: currentUser,
-                createdAt: serverTimestamp()
-              });
-            } catch (err) {
-              window.showAlert("Fayl hajmi juda katta yoki xona xatosi!");
-            }
-          };
-          reader.readAsDataURL(blob);
-        };
-
-        mediaRecorder.start(500);
-        if (isVideo) isRecordingVideo = true; else isRecordingAudio = true;
-
-        document.getElementById('recordingBar').classList.remove('hidden');
-        document.getElementById('recordingStatusText').innerText = isVideo ? "Yumaloq Video Yozilmoqda..." : "Ovoz Yozilmoqda...";
-      } catch (e) {
-        window.showAlert("Mikrofon yoki kameraga ruxsat berilmadi: " + e.message);
-      }
-    }
-
-    window.cancelRecording = () => {
-      shouldCancelRecording = true;
-      if (mediaRecorder && mediaRecorder.state !== 'inactive') {
-        mediaRecorder.stop();
-      }
-      isRecordingAudio = false;
-      isRecordingVideo = false;
-      document.getElementById('recordingBar').classList.add('hidden');
-    };
-
-    window.finishRecording = () => {
-      shouldCancelRecording = false;
-      if (mediaRecorder && mediaRecorder.state !== 'inactive') {
-        mediaRecorder.stop();
-      }
-      isRecordingAudio = false;
-      isRecordingVideo = false;
-      document.getElementById('recordingBar').classList.add('hidden');
-    };
-
-    // WEBRTC CALLING & AUDIO STREAM FIX
-    window.startCall = async (type) => {
-      activeCallType = type;
+    // LIVE MIKROFON VA LIVE KAMERA BOSHQARUVI
+    window.startLiveStream = async (type) => {
+      activeStreamType = type;
       document.getElementById('callOverlay').classList.remove('hidden');
       document.getElementById('callPeerName').innerText = "Suhbatdosh";
-      document.getElementById('callStatus').innerText = "Qo'ng'iroq qilinmoqda...";
+      document.getElementById('callStatus').innerText = type === 'video' ? "Live Kamera yoqilmoqda..." : "Live Mikrofon yoqilmoqda...";
       document.getElementById('acceptCallBtn').classList.add('hidden');
 
       if (type === 'video') document.getElementById('videoContainer').classList.remove('hidden');
@@ -648,19 +508,19 @@
           status: "ringing"
         });
       } catch (e) {
-        window.showAlert("Qo'ng'iroqni boshlashda xato: " + e.message);
-        window.endCall();
+        window.showAlert("Live ulanishda xato (Mikrofon/Kamera ruxsati kerak): " + e.message);
+        window.endLiveStream();
       }
     };
 
-    window.acceptIncomingCall = async () => {
+    window.acceptIncomingStream = async () => {
       document.getElementById('acceptCallBtn').classList.add('hidden');
-      document.getElementById('callStatus').innerText = "Aloqada (Ovoz va video ulanyapti)...";
+      document.getElementById('callStatus').innerText = "Live ulanish o'rnatilmoqda...";
       
-      if (activeCallType === 'video') document.getElementById('videoContainer').classList.remove('hidden');
+      if (activeStreamType === 'video') document.getElementById('videoContainer').classList.remove('hidden');
       
       try {
-        localStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: activeCallType === 'video' });
+        localStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: activeStreamType === 'video' });
         document.getElementById('localVideo').srcObject = localStream;
 
         peerConnection = new RTCPeerConnection(rtcConfig);
@@ -675,11 +535,11 @@
           status: "accepted"
         }, { merge: true });
       } catch (e) {
-        window.showAlert("Qo'ng'iroqqa ulanish xatosi: " + e.message);
+        window.showAlert("Live qabul qilish xatosi: " + e.message);
       }
     };
 
-    window.endCall = async (notify = true) => {
+    window.endLiveStream = async (notify = true) => {
       if (localStream) {
         localStream.getTracks().forEach(track => track.stop());
         localStream = null;
@@ -689,6 +549,7 @@
         peerConnection = null;
       }
       document.getElementById('callOverlay').classList.add('hidden');
+      document.getElementById('videoContainer').classList.add('hidden');
 
       if (notify && currentRoomId) {
         try {
